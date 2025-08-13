@@ -1,0 +1,4 @@
+# Instead of torch==2.0.1
+Django==5.0.0
+djangorestframework==3.14.0
+django-cors-headers==4.3.1
