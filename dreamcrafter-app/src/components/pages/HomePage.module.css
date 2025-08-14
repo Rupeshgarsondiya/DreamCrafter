@@ -110,6 +110,34 @@
   transform: translateY(0px);
 }
 
+.mainTitle::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -20px;
+  right: -20px;
+  bottom: -10px;
+  background: linear-gradient(45deg,
+    rgba(165, 105, 189, 0.05) 0%,
+    rgba(210, 105, 30, 0.03) 50%,
+    transparent 100%
+  );
+  border-radius: 15px;
+  z-index: -1;
+  animation: titleGlow 4s ease-in-out infinite;
+}
+
+@keyframes titleGlow {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.02);
+  }
+}
+
 /* Brain Section - Center of Page */
 .brainSection {
   flex: 1;
@@ -118,6 +146,7 @@
   align-items: center;
   position: relative;
   z-index: 5;
+  padding: 2rem;
 }
 
 .brainContainer {

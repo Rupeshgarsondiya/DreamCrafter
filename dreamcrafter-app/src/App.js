@@ -6,8 +6,8 @@ import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 
 // Import page components
-import LandingPage from './components/pages/LandingPage'; // NEW: Combined landing page
-import HomePage from './components/pages/HomePage';       // Only shown after login
+import LandingPage from './components/pages/LandingPage';
+// ✅ REMOVED: HomePage and FeaturesPage since they're not used
 import LoginPage from './components/pages/LoginPage';
 import SignupPage from './components/pages/SignUpPage';
 import Dashboard from './components/pages/Dashboard';
@@ -16,7 +16,7 @@ import Dashboard from './components/pages/Dashboard';
 import AuthService from './services/auth';
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('landing'); // Changed from 'home'
+  const [currentPage, setCurrentPage] = useState('landing');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
@@ -28,9 +28,9 @@ function App() {
       if (authStatus && (currentPage === 'login' || currentPage === 'signup')) {
         setCurrentPage('dashboard');
       }
-      // If authenticated and on landing, go to home
+      // Keep users on landing page (which has all sections)
       else if (authStatus && currentPage === 'landing') {
-        setCurrentPage('home');
+        setCurrentPage('landing'); // ✅ STAY ON LANDING PAGE
       }
     };
 
@@ -47,18 +47,19 @@ function App() {
   const handleAuthChange = (authStatus) => {
     setIsAuthenticated(authStatus);
     if (authStatus) {
-      setCurrentPage('home'); // Go to actual HomePage after login
+      setCurrentPage('landing'); // ✅ STAY ON LANDING PAGE WHEN AUTHENTICATED
     } else {
-      setCurrentPage('landing'); // Go back to landing if logged out
+      setCurrentPage('landing');
     }
   };
 
   const renderPage = () => {
     switch (currentPage) {
       case 'landing':
-        return <LandingPage setCurrentPage={setCurrentPage} />;
-      case 'home':
-        return <HomePage setCurrentPage={setCurrentPage} />;
+      case 'home':      // ✅ REDIRECT TO LANDING
+      case 'features':  // ✅ REDIRECT TO LANDING  
+      case 'news':      // ✅ REDIRECT TO LANDING
+        return <LandingPage setCurrentPage={setCurrentPage} isAuthenticated={isAuthenticated} />;
       case 'login':
         return <LoginPage setCurrentPage={setCurrentPage} onAuthChange={handleAuthChange} />;
       case 'signup':
@@ -66,11 +67,10 @@ function App() {
       case 'dashboard':
         return <Dashboard setCurrentPage={setCurrentPage} />;
       default:
-        return <LandingPage setCurrentPage={setCurrentPage} />;
+        return <LandingPage setCurrentPage={setCurrentPage} isAuthenticated={isAuthenticated} />;
     }
   };
 
-  // Don't show Navbar/Footer on login/signup pages
   const showNavFooter = currentPage !== 'login' && currentPage !== 'signup';
 
   return (

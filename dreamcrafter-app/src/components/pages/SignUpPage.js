@@ -1,6 +1,23 @@
-import React, { useState } from 'react';
-import { Moon, Cloud, Star, Eye, EyeOff, Mail, Lock, User, CheckCircle2, AlertCircle } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { 
+  Moon, 
+  Sparkles, 
+  Star, 
+  Eye, 
+  EyeOff, 
+  Mail, 
+  Lock, 
+  User, 
+  CheckCircle2, 
+  AlertCircle, 
+  ArrowLeft,
+  Heart,
+  Brain,
+  Users,
+  Shield
+} from 'lucide-react';
 import AuthService from '../../services/auth';
+import styles from './SignUpPage.module.css';
 
 const SignupPage = ({ setCurrentPage }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -8,24 +25,31 @@ const SignupPage = ({ setCurrentPage }) => {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
-  
+  const [isVisible, setIsVisible] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     email: '',
-    username: '', // Added username field required by Django
+    username: '',
     password: '',
     confirmPassword: '',
     agreeToTerms: false
   });
 
+  // Animation trigger
+  useEffect(() => {
+    const timer = setTimeout(() => setIsVisible(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // ✅ KEEP EXACT BACKEND CONNECTION CODE - NO CHANGES
   const handleInputChange = (e) => {
     const { name, type, checked, value } = e.target;
     setFormData({
       ...formData,
       [name]: type === 'checkbox' ? checked : value
     });
-    
+
     // Clear specific field error when user starts typing
     if (errors[name]) {
       setErrors({
@@ -33,7 +57,7 @@ const SignupPage = ({ setCurrentPage }) => {
         [name]: ''
       });
     }
-    
+
     // Clear general error
     if (errors.general) {
       setErrors({
@@ -82,7 +106,6 @@ const SignupPage = ({ setCurrentPage }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
     if (!validateForm()) {
       return;
     }
@@ -104,11 +127,11 @@ const SignupPage = ({ setCurrentPage }) => {
     try {
       console.log('Submitting registration data...');
       const result = await AuthService.register(apiData);
-      
+
       if (result.success) {
         setSuccessMessage(result.message);
         console.log('Registration successful!');
-        
+
         // Clear form
         setFormData({
           firstName: '',
@@ -119,19 +142,18 @@ const SignupPage = ({ setCurrentPage }) => {
           confirmPassword: '',
           agreeToTerms: false
         });
-        
+
         // Redirect to login after successful registration
         setTimeout(() => {
           setCurrentPage('login');
         }, 3000);
-        
       } else {
         console.log('Registration failed:', result.error);
-        
+
         // Handle backend validation errors
         if (result.error) {
           const backendErrors = {};
-          
+
           // Map Django field names to React field names
           const fieldMapping = {
             'first_name': 'firstName',
@@ -141,24 +163,23 @@ const SignupPage = ({ setCurrentPage }) => {
             'username': 'username',
             'password': 'password'
           };
-          
+
           Object.keys(result.error).forEach(key => {
             const frontendKey = fieldMapping[key] || key;
-            
             if (Array.isArray(result.error[key])) {
               backendErrors[frontendKey] = result.error[key][0];
             } else {
               backendErrors[frontendKey] = result.error[key];
             }
           });
-          
+
           // Handle non-field errors
           if (result.error.non_field_errors) {
             backendErrors.general = Array.isArray(result.error.non_field_errors) 
               ? result.error.non_field_errors[0] 
               : result.error.non_field_errors;
           }
-          
+
           setErrors(backendErrors);
         } else {
           setErrors({ general: result.message });
@@ -171,292 +192,355 @@ const SignupPage = ({ setCurrentPage }) => {
       setLoading(false);
     }
   };
+  // ✅ END OF BACKEND CONNECTION CODE - UNCHANGED
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 relative overflow-hidden">
+    <div className={styles.signupPage}>
       {/* Animated Background Elements */}
-      <div className="absolute inset-0">
-        <Moon className="absolute top-10 left-10 w-8 h-8 text-yellow-200 opacity-70 animate-pulse" />
-        <Cloud className="absolute top-20 right-20 w-12 h-12 text-white opacity-50 animate-float" />
-        <Star className="absolute bottom-20 left-20 w-6 h-6 text-yellow-300 opacity-80 animate-twinkle" />
-        <Star className="absolute top-1/3 right-1/3 w-4 h-4 text-purple-200 opacity-60 animate-twinkle" />
-        <Star className="absolute bottom-1/3 left-1/4 w-5 h-5 text-blue-200 opacity-70 animate-twinkle" />
+      <div className={styles.backgroundElements}>
+        <div className={styles.floatingElement1}>
+          <Brain className={styles.floatingIcon} />
+        </div>
+        <div className={styles.floatingElement2}>
+          <Moon className={styles.floatingIcon} />
+        </div>
+        <div className={styles.floatingElement3}>
+          <Star className={styles.floatingIcon} />
+        </div>
+        <div className={styles.floatingElement4}>
+          <Sparkles className={styles.floatingIcon} />
+        </div>
+        <div className={styles.floatingElement5}>
+          <Heart className={styles.floatingIcon} />
+        </div>
+        <div className={styles.floatingElement6}>
+          <Users className={styles.floatingIcon} />
+        </div>
       </div>
 
-      <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
-        <div className="bg-white/10 backdrop-blur-md rounded-3xl shadow-2xl w-full max-w-md p-8 border border-white/20">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-white mb-2">Begin your journey</h1>
-            <p className="text-purple-200">into the dream dimension</p>
+      {/* Animated Particles */}
+      <div className={styles.particles}>
+        {[...Array(25)].map((_, i) => (
+          <div
+            key={i}
+            className={`${styles.particle} ${styles[`particle${i + 1}`]}`}
+          ></div>
+        ))}
+      </div>
+
+      {/* Back to Landing Button */}
+      <button 
+        className={styles.backButton}
+        onClick={() => setCurrentPage('landing')}
+        aria-label="Back to landing page"
+      >
+        <ArrowLeft className={styles.backIcon} />
+        <span>Back to Landing</span>
+      </button>
+
+      {/* Main Signup Container */}
+      <div className={`${styles.signupContainer} ${isVisible ? styles.visible : ''}`}>
+        {/* Logo Section */}
+        <div className={styles.logoSection}>
+          <div className={styles.logoWrapper}>
+            <div className={styles.logoMain}>
+              <div className={styles.logoIcon}>
+                <Moon className={styles.moonIcon} />
+                <div className={styles.logoSparkle}>
+                  <Sparkles className={styles.sparkleIcon} />
+                </div>
+              </div>
+              <div className={styles.logoGlow}></div>
+            </div>
+            <h1 className={styles.brandTitle}>
+              <span className={styles.dream}>Dream</span>
+              <span className={styles.crafter}>Crafter</span>
+            </h1>
+            <p className={styles.brandSubtitle}>A velvet lens on your inner world</p>
+          </div>
+        </div>
+
+        {/* Signup Form */}
+        <div className={styles.formSection}>
+          <div className={styles.formHeader}>
+            <h2 className={styles.formTitle}>Begin Your Journey</h2>
+            <p className={styles.formSubtitle}>
+              Step into the dream dimension and unlock the mysteries of your subconscious mind
+            </p>
           </div>
 
-          {/* Success Message */}
-          {successMessage && (
-            <div className="mb-6 p-4 bg-green-500/20 border border-green-400 rounded-lg text-green-200 text-center flex items-center">
-              <CheckCircle2 className="w-5 h-5 mr-2 flex-shrink-0" />
-              <span>{successMessage}</span>
-            </div>
-          )}
-
-          {/* General Error Message */}
-          {errors.general && (
-            <div className="mb-6 p-4 bg-red-500/20 border border-red-400 rounded-lg text-red-200 text-center flex items-center">
-              <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0" />
-              <span>{errors.general}</span>
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Name Fields */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-purple-300" />
+          <form onSubmit={handleSubmit} className={styles.signupForm}>
+            {/* Name Fields Row */}
+            <div className={styles.nameRow}>
+              {/* First Name Field */}
+              <div className={styles.inputGroup}>
+                <label className={styles.inputLabel}>
+                  <User className={styles.labelIcon} />
+                  First Name
+                </label>
+                <div className={styles.inputWrapper}>
                   <input
                     type="text"
                     name="firstName"
-                    placeholder="First Name"
                     value={formData.firstName}
                     onChange={handleInputChange}
-                    disabled={loading}
-                    className={`w-full pl-10 pr-4 py-3 bg-white/10 border ${
-                      errors.firstName ? 'border-red-400' : 'border-purple-300/30'
-                    } rounded-lg text-white placeholder-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed`}
+                    className={`${styles.input} ${errors.firstName ? styles.inputError : ''}`}
+                    placeholder="Your first name..."
                     required
                   />
+                  <div className={styles.inputGlow}></div>
                 </div>
                 {errors.firstName && (
-                  <p className="text-red-300 text-sm mt-1 flex items-center">
-                    <AlertCircle className="w-4 h-4 mr-1" />
-                    {errors.firstName}
-                  </p>
+                  <div className={styles.fieldError}>
+                    <AlertCircle className={styles.errorIcon} />
+                    <span>{errors.firstName}</span>
+                  </div>
                 )}
               </div>
 
-              <div>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-purple-300" />
+              {/* Last Name Field */}
+              <div className={styles.inputGroup}>
+                <label className={styles.inputLabel}>
+                  <Users className={styles.labelIcon} />
+                  Last Name
+                </label>
+                <div className={styles.inputWrapper}>
                   <input
                     type="text"
                     name="lastName"
-                    placeholder="Last Name"
                     value={formData.lastName}
                     onChange={handleInputChange}
-                    disabled={loading}
-                    className={`w-full pl-10 pr-4 py-3 bg-white/10 border ${
-                      errors.lastName ? 'border-red-400' : 'border-purple-300/30'
-                    } rounded-lg text-white placeholder-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed`}
+                    className={`${styles.input} ${errors.lastName ? styles.inputError : ''}`}
+                    placeholder="Your last name..."
                     required
                   />
+                  <div className={styles.inputGlow}></div>
                 </div>
                 {errors.lastName && (
-                  <p className="text-red-300 text-sm mt-1 flex items-center">
-                    <AlertCircle className="w-4 h-4 mr-1" />
-                    {errors.lastName}
-                  </p>
+                  <div className={styles.fieldError}>
+                    <AlertCircle className={styles.errorIcon} />
+                    <span>{errors.lastName}</span>
+                  </div>
                 )}
               </div>
             </div>
 
             {/* Email Field */}
-            <div>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-purple-300" />
+            <div className={styles.inputGroup}>
+              <label className={styles.inputLabel}>
+                <Mail className={styles.labelIcon} />
+                Email Address
+              </label>
+              <div className={styles.inputWrapper}>
                 <input
                   type="email"
                   name="email"
-                  placeholder="Email Address"
                   value={formData.email}
                   onChange={handleInputChange}
-                  disabled={loading}
-                  className={`w-full pl-10 pr-4 py-3 bg-white/10 border ${
-                    errors.email ? 'border-red-400' : 'border-purple-300/30'
-                  } rounded-lg text-white placeholder-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed`}
+                  className={`${styles.input} ${errors.email ? styles.inputError : ''}`}
+                  placeholder="Enter your email address..."
                   required
                 />
+                <div className={styles.inputGlow}></div>
               </div>
               {errors.email && (
-                <p className="text-red-300 text-sm mt-1 flex items-center">
-                  <AlertCircle className="w-4 h-4 mr-1" />
-                  {errors.email}
-                </p>
+                <div className={styles.fieldError}>
+                  <AlertCircle className={styles.errorIcon} />
+                  <span>{errors.email}</span>
+                </div>
               )}
             </div>
 
             {/* Username Field */}
-            <div>
-              <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-purple-300" />
+            <div className={styles.inputGroup}>
+              <label className={styles.inputLabel}>
+                <Shield className={styles.labelIcon} />
+                Username
+              </label>
+              <div className={styles.inputWrapper}>
                 <input
                   type="text"
                   name="username"
-                  placeholder="Username"
                   value={formData.username}
                   onChange={handleInputChange}
-                  disabled={loading}
-                  className={`w-full pl-10 pr-4 py-3 bg-white/10 border ${
-                    errors.username ? 'border-red-400' : 'border-purple-300/30'
-                  } rounded-lg text-white placeholder-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed`}
+                  className={`${styles.input} ${errors.username ? styles.inputError : ''}`}
+                  placeholder="Choose a unique username..."
                   required
                 />
+                <div className={styles.inputGlow}></div>
               </div>
               {errors.username && (
-                <p className="text-red-300 text-sm mt-1 flex items-center">
-                  <AlertCircle className="w-4 h-4 mr-1" />
-                  {errors.username}
-                </p>
+                <div className={styles.fieldError}>
+                  <AlertCircle className={styles.errorIcon} />
+                  <span>{errors.username}</span>
+                </div>
               )}
             </div>
 
-            {/* Password Field */}
-            <div>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-purple-300" />
+            {/* Password Fields Row */}
+            <div className={styles.passwordRow}>
+              {/* Password Field */}
+              <div className={styles.inputGroup}>
+                <label className={styles.inputLabel}>
+                  <Lock className={styles.labelIcon} />
+                  Password
+                </label>
+                <div className={styles.inputWrapper}>
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    name="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    className={`${styles.input} ${errors.password ? styles.inputError : ''}`}
+                    placeholder="Create a strong password..."
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className={styles.passwordToggle}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? (
+                      <EyeOff className={styles.eyeIcon} />
+                    ) : (
+                      <Eye className={styles.eyeIcon} />
+                    )}
+                  </button>
+                  <div className={styles.inputGlow}></div>
+                </div>
+                {errors.password && (
+                  <div className={styles.fieldError}>
+                    <AlertCircle className={styles.errorIcon} />
+                    <span>{errors.password}</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Confirm Password Field */}
+              <div className={styles.inputGroup}>
+                <label className={styles.inputLabel}>
+                  <Lock className={styles.labelIcon} />
+                  Confirm Password
+                </label>
+                <div className={styles.inputWrapper}>
+                  <input
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleInputChange}
+                    className={`${styles.input} ${errors.confirmPassword ? styles.inputError : ''}`}
+                    placeholder="Confirm your password..."
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className={styles.passwordToggle}
+                    aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className={styles.eyeIcon} />
+                    ) : (
+                      <Eye className={styles.eyeIcon} />
+                    )}
+                  </button>
+                  <div className={styles.inputGlow}></div>
+                </div>
+                {errors.confirmPassword && (
+                  <div className={styles.fieldError}>
+                    <AlertCircle className={styles.errorIcon} />
+                    <span>{errors.confirmPassword}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Terms and Conditions */}
+            <div className={styles.termsGroup}>
+              <label className={styles.checkboxLabel}>
                 <input
-                  type={showPassword ? 'text' : 'password'}
-                  name="password"
-                  placeholder="Password"
-                  value={formData.password}
+                  type="checkbox"
+                  name="agreeToTerms"
+                  checked={formData.agreeToTerms}
                   onChange={handleInputChange}
-                  disabled={loading}
-                  className={`w-full pl-10 pr-12 py-3 bg-white/10 border ${
-                    errors.password ? 'border-red-400' : 'border-purple-300/30'
-                  } rounded-lg text-white placeholder-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed`}
+                  className={styles.checkbox}
                   required
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-purple-300 hover:text-white focus:outline-none disabled:opacity-50"
-                  disabled={loading}
-                >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
-              </div>
-              {errors.password && (
-                <p className="text-red-300 text-sm mt-1 flex items-center">
-                  <AlertCircle className="w-4 h-4 mr-1" />
-                  {errors.password}
-                </p>
-              )}
-            </div>
-
-            {/* Confirm Password Field */}
-            <div>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-purple-300" />
-                <input
-                  type={showConfirmPassword ? 'text' : 'password'}
-                  name="confirmPassword"
-                  placeholder="Confirm Password"
-                  value={formData.confirmPassword}
-                  onChange={handleInputChange}
-                  disabled={loading}
-                  className={`w-full pl-10 pr-12 py-3 bg-white/10 border ${
-                    errors.confirmPassword ? 'border-red-400' : 'border-purple-300/30'
-                  } rounded-lg text-white placeholder-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed`}
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-purple-300 hover:text-white focus:outline-none disabled:opacity-50"
-                  disabled={loading}
-                >
-                  {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
-              </div>
-              {errors.confirmPassword && (
-                <p className="text-red-300 text-sm mt-1 flex items-center">
-                  <AlertCircle className="w-4 h-4 mr-1" />
-                  {errors.confirmPassword}
-                </p>
-              )}
-            </div>
-
-            {/* Terms Checkbox */}
-            <div className="flex items-start">
-              <input
-                type="checkbox"
-                name="agreeToTerms"
-                checked={formData.agreeToTerms}
-                onChange={handleInputChange}
-                disabled={loading}
-                className="mt-1 mr-3 h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded disabled:opacity-50"
-                required
-              />
-              <label className="text-sm text-purple-200">
-                I agree to the{' '}
-                <a href="#" className="text-purple-400 hover:text-purple-300 underline">
-                  Terms and Conditions
-                </a>{' '}
-                and{' '}
-                <a href="#" className="text-purple-400 hover:text-purple-300 underline">
-                  Privacy Policy
-                </a>
+                <div className={styles.checkboxCustom}>
+                  {formData.agreeToTerms && (
+                    <CheckCircle2 className={styles.checkIcon} />
+                  )}
+                </div>
+                <span className={styles.termsText}>
+                  I agree to the{' '}
+                  <button type="button" className={styles.termsLink}>
+                    Terms and Conditions
+                  </button>
+                  {' '}and{' '}
+                  <button type="button" className={styles.termsLink}>
+                    Privacy Policy
+                  </button>
+                </span>
               </label>
+              {errors.agreeToTerms && (
+                <div className={styles.fieldError}>
+                  <AlertCircle className={styles.errorIcon} />
+                  <span>{errors.agreeToTerms}</span>
+                </div>
+              )}
             </div>
-            {errors.agreeToTerms && (
-              <p className="text-red-300 text-sm flex items-center">
-                <AlertCircle className="w-4 h-4 mr-1" />
-                {errors.agreeToTerms}
-              </p>
+
+            {/* General Error/Success Messages */}
+            {errors.general && (
+              <div className={styles.errorMessage}>
+                <AlertCircle className={styles.messageIcon} />
+                <span>{errors.general}</span>
+              </div>
             )}
 
-            {/* Submit Button */}
+            {successMessage && (
+              <div className={styles.successMessage}>
+                <CheckCircle2 className={styles.messageIcon} />
+                <span>{successMessage}</span>
+              </div>
+            )}
+
+            {/* Signup Button */}
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-medium rounded-lg transform transition-all duration-300 hover:scale-[1.02] focus:outline-none focus:ring-4 focus:ring-purple-500/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center"
+              className={`${styles.signupButton} ${loading ? styles.loading : ''}`}
             >
-              {loading ? (
-                <>
-                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Creating Account...
-                </>
-              ) : (
-                <>
-                  <CheckCircle2 className="w-5 h-5 mr-2" />
-                  Create Account
-                </>
+              <span className={styles.buttonText}>
+                {loading ? 'Creating Your Dream Portal...' : 'Enter the Dream Dimension'}
+              </span>
+              {loading && (
+                <div className={styles.loadingSpinner}>
+                  <Moon className={styles.spinnerIcon} />
+                </div>
               )}
+              <div className={styles.buttonGlow}></div>
             </button>
           </form>
 
-          <div className="text-center mt-6">
-            <p className="text-purple-200">
+          {/* Login Link */}
+          <div className={styles.loginSection}>
+            <p className={styles.loginText}>
               Already have a dream portal?{' '}
-              <button 
+              <button
+                className={styles.loginLink}
                 onClick={() => setCurrentPage('login')}
-                className="text-purple-400 hover:text-purple-300 font-medium underline focus:outline-none disabled:opacity-50"
-                disabled={loading}
               >
-                Sign In
+                Sign Into Your Dreams
               </button>
             </p>
           </div>
         </div>
       </div>
 
-      <style jsx>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-20px); }
-        }
-        @keyframes twinkle {
-          0%, 100% { opacity: 0.3; }
-          50% { opacity: 1; }
-        }
-        .animate-float {
-          animation: float 6s ease-in-out infinite;
-        }
-        .animate-twinkle {
-          animation: twinkle 2s ease-in-out infinite;
-        }
-      `}</style>
+      {/* Velvet Overlay */}
+      <div className={styles.velvetOverlay}></div>
     </div>
   );
 };

@@ -1,24 +1,44 @@
-import React, { useState } from 'react';
-import { Moon, Cloud, Star, Eye, EyeOff, Mail, Lock, AlertCircle, CheckCircle2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { 
+  Moon, 
+  Sparkles, 
+  Star, 
+  Eye, 
+  EyeOff, 
+  Mail, 
+  Lock, 
+  AlertCircle, 
+  CheckCircle2, 
+  ArrowLeft,
+  Heart,
+  Brain
+} from 'lucide-react';
 import AuthService from '../../services/auth';
+import styles from './LoginPage.module.css';
 
 const LoginPage = ({ setCurrentPage, onAuthChange }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  
+  const [isVisible, setIsVisible] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
 
+  // Animation trigger
+  useEffect(() => {
+    const timer = setTimeout(() => setIsVisible(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // ✅ KEEP EXACT BACKEND CONNECTION CODE - NO CHANGES
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
-    
     // Clear messages when user starts typing
     if (error) setError('');
     if (successMessage) setSuccessMessage('');
@@ -29,25 +49,21 @@ const LoginPage = ({ setCurrentPage, onAuthChange }) => {
       setError('Email is required');
       return false;
     }
-    
     if (!formData.password) {
       setError('Password is required');
       return false;
     }
-
     // Basic email format validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       setError('Please enter a valid email address');
       return false;
     }
-
     return true;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
     if (!validateForm()) {
       return;
     }
@@ -64,7 +80,7 @@ const LoginPage = ({ setCurrentPage, onAuthChange }) => {
     try {
       console.log('Attempting login...');
       const result = await AuthService.login(credentials);
-      
+
       if (result.success) {
         console.log('Login successful:', result.data);
         setSuccessMessage(result.message);
@@ -74,21 +90,20 @@ const LoginPage = ({ setCurrentPage, onAuthChange }) => {
           email: '',
           password: ''
         });
-        
+
         // Notify parent component about auth change
         if (onAuthChange) {
           onAuthChange(true);
         }
-        
+
         // Redirect to dashboard after a brief delay
         setTimeout(() => {
           setCurrentPage('dashboard');
         }, 1500);
-        
       } else {
         console.log('Login failed:', result.error);
         setError(result.message);
-        
+
         // Handle specific error cases
         if (result.error) {
           if (result.error.email) {
@@ -107,152 +122,194 @@ const LoginPage = ({ setCurrentPage, onAuthChange }) => {
       setLoading(false);
     }
   };
+  // ✅ END OF BACKEND CONNECTION CODE - UNCHANGED
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 relative overflow-hidden">
+    <div className={styles.loginPage}>
       {/* Animated Background Elements */}
-      <div className="absolute inset-0">
-        <Moon className="absolute top-10 left-10 w-8 h-8 text-yellow-200 opacity-70 animate-pulse" />
-        <Cloud className="absolute top-20 right-20 w-12 h-12 text-white opacity-50 animate-float" />
-        <Star className="absolute bottom-20 left-20 w-6 h-6 text-yellow-300 opacity-80 animate-twinkle" />
-        <Star className="absolute top-1/3 right-1/3 w-4 h-4 text-purple-200 opacity-60 animate-twinkle" />
-        <Star className="absolute bottom-1/3 left-1/4 w-5 h-5 text-blue-200 opacity-70 animate-twinkle" />
+      <div className={styles.backgroundElements}>
+        <div className={styles.floatingElement1}>
+          <Brain className={styles.floatingIcon} />
+        </div>
+        <div className={styles.floatingElement2}>
+          <Moon className={styles.floatingIcon} />
+        </div>
+        <div className={styles.floatingElement3}>
+          <Star className={styles.floatingIcon} />
+        </div>
+        <div className={styles.floatingElement4}>
+          <Sparkles className={styles.floatingIcon} />
+        </div>
+        <div className={styles.floatingElement5}>
+          <Heart className={styles.floatingIcon} />
+        </div>
       </div>
 
-      <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
-        <div className="bg-white/10 backdrop-blur-md rounded-3xl shadow-2xl w-full max-w-md p-8 border border-white/20">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-white mb-2">Sign in to explore</h1>
-            <p className="text-purple-200">your inner world</p>
+      {/* Animated Particles */}
+      <div className={styles.particles}>
+        {[...Array(20)].map((_, i) => (
+          <div
+            key={i}
+            className={`${styles.particle} ${styles[`particle${i + 1}`]}`}
+          ></div>
+        ))}
+      </div>
+
+      {/* Back to Landing Button */}
+      <button 
+        className={styles.backButton}
+        onClick={() => setCurrentPage('landing')}
+        aria-label="Back to landing page"
+      >
+        <ArrowLeft className={styles.backIcon} />
+        <span>Back to Landing</span>
+      </button>
+
+      {/* Main Login Container */}
+      <div className={`${styles.loginContainer} ${isVisible ? styles.visible : ''}`}>
+        {/* Logo Section */}
+        <div className={styles.logoSection}>
+          <div className={styles.logoWrapper}>
+            <div className={styles.logoMain}>
+              <div className={styles.logoIcon}>
+                <Moon className={styles.moonIcon} />
+                <div className={styles.logoSparkle}>
+                  <Sparkles className={styles.sparkleIcon} />
+                </div>
+              </div>
+              <div className={styles.logoGlow}></div>
+            </div>
+            <h1 className={styles.brandTitle}>
+              <span className={styles.dream}>Dream</span>
+              <span className={styles.crafter}>Crafter</span>
+            </h1>
+            <p className={styles.brandSubtitle}>A velvet lens on your inner world</p>
+          </div>
+        </div>
+
+        {/* Login Form */}
+        <div className={styles.formSection}>
+          <div className={styles.formHeader}>
+            <h2 className={styles.formTitle}>Welcome Back, Dreamer</h2>
+            <p className={styles.formSubtitle}>
+              Step into your consciousness and unlock the mysteries within
+            </p>
           </div>
 
-          {/* Success Message */}
-          {successMessage && (
-            <div className="mb-6 p-4 bg-green-500/20 border border-green-400 rounded-lg text-green-200 text-center flex items-center">
-              <CheckCircle2 className="w-5 h-5 mr-2 flex-shrink-0" />
-              <span>{successMessage}</span>
-            </div>
-          )}
-
-          {/* Error Message */}
-          {error && (
-            <div className="mb-6 p-4 bg-red-500/20 border border-red-400 rounded-lg text-red-200 text-center flex items-center">
-              <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0" />
-              <span>{error}</span>
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className={styles.loginForm}>
             {/* Email Field */}
-            <div>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-purple-300" />
+            <div className={styles.inputGroup}>
+              <label className={styles.inputLabel}>
+                <Mail className={styles.labelIcon} />
+                Email Address
+              </label>
+              <div className={styles.inputWrapper}>
                 <input
                   type="email"
                   name="email"
-                  placeholder="Email Address"
                   value={formData.email}
                   onChange={handleInputChange}
-                  disabled={loading}
-                  className="w-full pl-10 pr-4 py-3 bg-white/10 border border-purple-300/30 rounded-lg text-white placeholder-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  className={styles.input}
+                  placeholder="Enter your email address..."
                   required
-                  autoComplete="email"
                 />
+                <div className={styles.inputGlow}></div>
               </div>
             </div>
 
             {/* Password Field */}
-            <div>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-purple-300" />
+            <div className={styles.inputGroup}>
+              <label className={styles.inputLabel}>
+                <Lock className={styles.labelIcon} />
+                Password
+              </label>
+              <div className={styles.inputWrapper}>
                 <input
                   type={showPassword ? 'text' : 'password'}
                   name="password"
-                  placeholder="Password"
                   value={formData.password}
                   onChange={handleInputChange}
-                  disabled={loading}
-                  className="w-full pl-10 pr-12 py-3 bg-white/10 border border-purple-300/30 rounded-lg text-white placeholder-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  className={styles.input}
+                  placeholder="Enter your password..."
                   required
-                  autoComplete="current-password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-purple-300 hover:text-white focus:outline-none disabled:opacity-50"
-                  disabled={loading}
+                  className={styles.passwordToggle}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showPassword ? (
+                    <EyeOff className={styles.eyeIcon} />
+                  ) : (
+                    <Eye className={styles.eyeIcon} />
+                  )}
                 </button>
+                <div className={styles.inputGlow}></div>
               </div>
             </div>
 
-            {/* Remember Me and Forgot Password */}
-            <div className="flex items-center justify-between text-sm">
-              <label className="flex items-center text-purple-200">
-                <input 
-                  type="checkbox" 
-                  className="mr-2 rounded focus:ring-purple-500 bg-white/10 border-purple-300"
-                  disabled={loading}
-                />
-                Remember me
-              </label>
-              <a href="#" className="text-purple-400 hover:text-purple-300 underline">
-                Forgot password?
-              </a>
-            </div>
+            {/* Error/Success Messages */}
+            {error && (
+              <div className={styles.errorMessage}>
+                <AlertCircle className={styles.messageIcon} />
+                <span>{error}</span>
+              </div>
+            )}
 
-            {/* Submit Button */}
+            {successMessage && (
+              <div className={styles.successMessage}>
+                <CheckCircle2 className={styles.messageIcon} />
+                <span>{successMessage}</span>
+              </div>
+            )}
+
+            {/* Login Button */}
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-medium rounded-lg transform transition-all duration-300 hover:scale-[1.02] focus:outline-none focus:ring-4 focus:ring-purple-500/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center"
+              className={`${styles.loginButton} ${loading ? styles.loading : ''}`}
             >
-              {loading ? (
-                <>
-                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Signing in...
-                </>
-              ) : (
-                'Sign In'
+              <span className={styles.buttonText}>
+                {loading ? 'Entering Dream State...' : 'Enter Your Dreams'}
+              </span>
+              {loading && (
+                <div className={styles.loadingSpinner}>
+                  <Moon className={styles.spinnerIcon} />
+                </div>
               )}
+              <div className={styles.buttonGlow}></div>
             </button>
+
+            {/* Forgot Password */}
+            <div className={styles.forgotPassword}>
+              <button
+                type="button"
+                className={styles.forgotLink}
+                onClick={() => {/* Add forgot password logic */}}
+              >
+                Forgotten your dreams? Recover them here
+              </button>
+            </div>
           </form>
 
-          <div className="text-center mt-6">
-            <p className="text-purple-200">
+          {/* Sign Up Link */}
+          <div className={styles.signupSection}>
+            <p className={styles.signupText}>
               New to the dream world?{' '}
-              <button 
+              <button
+                className={styles.signupLink}
                 onClick={() => setCurrentPage('signup')}
-                className="text-purple-400 hover:text-purple-300 font-medium underline focus:outline-none disabled:opacity-50"
-                disabled={loading}
               >
-                Create Account
+                Create Your Dream Account
               </button>
             </p>
           </div>
         </div>
       </div>
 
-      <style jsx>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-20px); }
-        }
-        @keyframes twinkle {
-          0%, 100% { opacity: 0.3; }
-          50% { opacity: 1; }
-        }
-        .animate-float {
-          animation: float 6s ease-in-out infinite;
-        }
-        .animate-twinkle {
-          animation: twinkle 2s ease-in-out infinite;
-        }
-      `}</style>
+      {/* Velvet Overlay */}
+      <div className={styles.velvetOverlay}></div>
     </div>
   );
 };

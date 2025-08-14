@@ -1,9 +1,11 @@
-import React from 'react';
-import { Moon, Sparkles, Home, Zap, Newspaper, User, LogOut, Mail } from 'lucide-react';
+import React, { useState } from 'react';
+import { Moon, Sparkles, Home, Zap, Newspaper, User, LogOut, Mail, Menu, X } from 'lucide-react';
 import AuthService from '../../services/auth';
-import styles from './Navbar.module.css'; // ✅ CORRECT CSS MODULE IMPORT
+import styles from './Navbar.module.css';
 
 const Navbar = ({ setCurrentPage, currentPage, isAuthenticated }) => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   const handleLogout = async () => {
     const result = await AuthService.logout();
     if (result.success) {
@@ -12,143 +14,125 @@ const Navbar = ({ setCurrentPage, currentPage, isAuthenticated }) => {
     }
   };
 
-  const navItems = isAuthenticated ? [
-    {
-      id: 'home',
-      label: 'Home',
-      icon: Home,
-      action: () => setCurrentPage('home')
-    },
-    {
-      id: 'features',
-      label: 'Features', 
-      icon: Zap,
-      action: () => setCurrentPage('features')
-    },
-    {
-      id: 'news',
-      label: 'News',
-      icon: Newspaper,
-      action: () => document.getElementById('news')?.scrollIntoView({ behavior: 'smooth' })
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const offsetTop = element.offsetTop - 70;
+      window.scrollTo({
+        top: offsetTop,
+        behavior: 'smooth'
+      });
     }
-  ] : [
-    {
-      id: 'hero',
-      label: 'Home',
-      icon: Home,
-      action: () => document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' })
-    },
-    {
-      id: 'features',
-      label: 'Features',
-      icon: Zap,
-      action: () => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })
-    },
-    {
-      id: 'news',
-      label: 'News',
-      icon: Newspaper,
-      action: () => document.getElementById('news')?.scrollIntoView({ behavior: 'smooth' })
-    }
+    setIsMobileMenuOpen(false);
+  };
+
+  const navItems = [
+    { id: 'home', label: 'Home', icon: Home, action: () => scrollToSection('home') },
+    { id: 'features', label: 'Features', icon: Zap, action: () => scrollToSection('features') },
+    { id: 'news', label: 'News', icon: Newspaper, action: () => scrollToSection('news') }
   ];
 
   return (
-    <nav className={styles.navbarContainer}>
-      <div className={styles.navbarContent}>
-        {/* Logo Section with Velvet Theme */}
-        <div
-          onClick={() => setCurrentPage(isAuthenticated ? 'home' : 'landing')}
-          className={styles.logoSection}
-        >
-          <div className={styles.logoIconContainer}>
-            <div className={styles.logoMainCircle}>
-              <Moon className={styles.moonIcon} />
-              <div className={styles.sparkleOverlay}>
-                <Sparkles className={styles.sparkleIcon} />
-              </div>
+    <nav className={styles.navbar}>
+      <div className={styles.container}>
+        {/* Logo - Always Visible */}
+        <div className={styles.logo} onClick={() => scrollToSection('home')}>
+          <div className={styles.logoIcon}>
+            <Moon className={styles.moonIcon} />
+            <div className={styles.sparkle}>
+              <Sparkles className={styles.sparkleIcon} />
             </div>
-            <div className={styles.logoGlow}></div>
           </div>
-          
-          <div className={styles.brandText}>
-            <h1 className={styles.siteName}>
-              <span className={styles.dreamText}>Dream</span>
-              <span className={styles.crafterText}>Crafter</span>
-            </h1>
-            <p className={styles.brandSlogan}>A velvet lens on your inner world</p>
+          <div className={styles.logoText}>
+            <span className={styles.dream}>Dream</span>
+            <span className={styles.crafter}>Crafter</span>
           </div>
         </div>
 
-        {/* Navigation Icons */}
-        <div className={styles.navSection}>
-          <div className={styles.navIcons}>
+        {/* Desktop Navigation - Hidden on Mobile */}
+        <div className={styles.desktopNav}>
+          {navItems.map(({ id, label, icon: Icon, action }) => (
+            <button key={id} onClick={action} className={styles.navItem}>
+              <Icon size={16} />
+              <span>{label}</span>
+            </button>
+          ))}
+        </div>
+
+        {/* Desktop Auth - Hidden on Mobile */}
+        <div className={styles.desktopAuth}>
+          {isAuthenticated ? (
+            <>
+              <button onClick={() => setCurrentPage('dashboard')} className={styles.authBtn}>
+                <User size={14} />
+                <span>Dashboard</span>
+              </button>
+              <button onClick={handleLogout} className={styles.authBtn}>
+                <LogOut size={14} />
+                <span>Logout</span>
+              </button>
+            </>
+          ) : (
+            <>
+              <button onClick={() => setCurrentPage('login')} className={styles.authBtn}>
+                <User size={14} />
+                <span>Login</span>
+              </button>
+              <button onClick={() => setCurrentPage('signup')} className={styles.signupBtn}>
+                <Mail size={14} />
+                <span>Sign Up</span>
+              </button>
+            </>
+          )}
+        </div>
+
+        {/* Mobile Menu Button - Only Visible on Mobile */}
+        <button 
+          className={styles.mobileToggle}
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
+      </div>
+
+      {/* Mobile Menu - Only Visible When Open */}
+      {isMobileMenuOpen && (
+        <div className={styles.mobileMenu}>
+          <div className={styles.mobileNav}>
             {navItems.map(({ id, label, icon: Icon, action }) => (
-              <div
-                key={id}
-                onClick={action}
-                className={`${styles.navIconWrapper} ${currentPage === id ? styles.active : ''}`}
-                title={label}
-              >
-                <div className={styles.navIconCircle}>
-                  <Icon className={styles.navIcon} />
-                </div>
-                <span className={styles.navLabel}>{label}</span>
-                <div className={styles.navTooltip}>{label}</div>
-              </div>
+              <button key={id} onClick={action} className={styles.mobileNavItem}>
+                <Icon size={18} />
+                <span>{label}</span>
+              </button>
             ))}
           </div>
-
-          {/* Auth Buttons */}
-          <div className={styles.authSection}>
+          <div className={styles.mobileAuth}>
             {isAuthenticated ? (
               <>
-                <button
-                  onClick={() => setCurrentPage('dashboard')}
-                  className={styles.dashboardButton}
-                  title="Dashboard"
-                >
-                  <User className={styles.authIcon} />
+                <button onClick={() => { setCurrentPage('dashboard'); setIsMobileMenuOpen(false); }} className={styles.mobileAuthBtn}>
+                  <User size={16} />
                   <span>Dashboard</span>
                 </button>
-                <button
-                  onClick={handleLogout}
-                  className={styles.logoutButton}
-                  title="Logout"
-                >
-                  <LogOut className={styles.authIcon} />
+                <button onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }} className={styles.mobileAuthBtn}>
+                  <LogOut size={16} />
                   <span>Logout</span>
                 </button>
               </>
             ) : (
               <>
-                <button
-                  onClick={() => setCurrentPage('login')}
-                  className={styles.loginButton}
-                >
-                  <Mail className={styles.authIcon} />
+                <button onClick={() => { setCurrentPage('login'); setIsMobileMenuOpen(false); }} className={styles.mobileAuthBtn}>
+                  <User size={16} />
                   <span>Login</span>
-                  <div className={styles.buttonShine}></div>
                 </button>
-                <button
-                  onClick={() => setCurrentPage('signup')}
-                  className={styles.signupButton}
-                >
-                  <User className={styles.authIcon} />
+                <button onClick={() => { setCurrentPage('signup'); setIsMobileMenuOpen(false); }} className={styles.mobileSignupBtn}>
+                  <Mail size={16} />
                   <span>Sign Up</span>
-                  <div className={styles.buttonShine}></div>
                 </button>
               </>
             )}
           </div>
         </div>
-
-        {/* Mobile Menu Button */}
-        <div className={styles.mobileMenuButton}>
-          <div className={styles.hamburgerLine}></div>
-          <div className={styles.hamburgerLine}></div>
-          <div className={styles.hamburgerLine}></div>
-        </div>
-      </div>
+      )}
     </nav>
   );
 };

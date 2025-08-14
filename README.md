@@ -1,3 +1,4 @@
+
 ```
 DreamCrafter
 ├─ README.md
@@ -41,12 +42,19 @@ DreamCrafter
 │  │  │  ├─ layout
 │  │  │  │  ├─ FloatingElement.js
 │  │  │  │  ├─ Footer.js
-│  │  │  │  └─ Navbar.js
+│  │  │  │  ├─ Footer.module.css
+│  │  │  │  ├─ Navbar.js
+│  │  │  │  └─ Navbar.module.css
 │  │  │  └─ pages
 │  │  │     ├─ Dashboard.js
+│  │  │     ├─ Featurepage.module.css
 │  │  │     ├─ FeaturesPage.js
 │  │  │     ├─ HomePage.js
+│  │  │     ├─ HomePage.module.css
+│  │  │     ├─ LandingPage.js
+│  │  │     ├─ LandingPage.module.css
 │  │  │     ├─ LoginPage.js
+│  │  │     ├─ NewsPage.js
 │  │  │     └─ SignUpPage.js
 │  │  ├─ hooks
 │  │  │  └─ useFloatingElements.js
