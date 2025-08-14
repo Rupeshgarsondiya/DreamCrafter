@@ -1,20 +1,24 @@
 import React from 'react';
 import { Cloud, Star, Sparkles } from 'lucide-react';
 
-const FloatingElement = ({ element }) => {
-  const IconComponent = {
-    cloud: Cloud,
-    star: Star,
-    sparkle: Sparkles
+const FloatingElement = ({ element = { type: 'cloud' } }) => {
+  // Add safety check
+  if (!element || !element.type) {
+    return null; // or return a default element
+  }
+  
+  const IconComponent = { 
+    cloud: Cloud, 
+    star: Star, 
+    sparkle: Sparkles 
   }[element.type];
-
-  const colors = {
-    cloud: 'text-blue-200',
+  
+  const colors = { 
+    cloud: 'text-blue-200', 
     star: 'text-yellow-200', 
-    sparkle: 'text-pink-200'
+    sparkle: 'text-pink-200' 
   };
-
-  return (
+    return (
     <div
       className="absolute pointer-events-none z-0"
       style={{

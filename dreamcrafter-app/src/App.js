@@ -6,91 +6,88 @@ import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 
 // Import page components
-import HomePage from './components/pages/HomePage';
-import FeaturesPage from './components/pages/FeaturesPage';
+import LandingPage from './components/pages/LandingPage'; // NEW: Combined landing page
+import HomePage from './components/pages/HomePage';       // Only shown after login
 import LoginPage from './components/pages/LoginPage';
 import SignupPage from './components/pages/SignUpPage';
 import Dashboard from './components/pages/Dashboard';
 
-// Import AuthService to check authentication status
+// Import AuthService
 import AuthService from './services/auth';
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('home');
+  const [currentPage, setCurrentPage] = useState('landing'); // Changed from 'home'
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Check authentication status on app load
   useEffect(() => {
     const checkAuth = () => {
       const authStatus = AuthService.isAuthenticated();
       setIsAuthenticated(authStatus);
       
-      // If user is authenticated and on login/signup, redirect to dashboard
+      // If authenticated and on login/signup, go to dashboard
       if (authStatus && (currentPage === 'login' || currentPage === 'signup')) {
         setCurrentPage('dashboard');
+      }
+      // If authenticated and on landing, go to home
+      else if (authStatus && currentPage === 'landing') {
+        setCurrentPage('home');
       }
     };
 
     checkAuth();
     
-    // Check auth status periodically or on storage change
     const handleStorageChange = () => {
       checkAuth();
     };
-    
+
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
   }, [currentPage]);
 
-  // Function to handle authentication state changes
   const handleAuthChange = (authStatus) => {
     setIsAuthenticated(authStatus);
     if (authStatus) {
-      setCurrentPage('dashboard');
+      setCurrentPage('home'); // Go to actual HomePage after login
     } else {
-      setCurrentPage('home');
+      setCurrentPage('landing'); // Go back to landing if logged out
     }
   };
 
   const renderPage = () => {
     switch (currentPage) {
+      case 'landing':
+        return <LandingPage setCurrentPage={setCurrentPage} />;
       case 'home':
         return <HomePage setCurrentPage={setCurrentPage} />;
-      case 'features':
-        return <FeaturesPage setCurrentPage={setCurrentPage} />;
       case 'login':
         return <LoginPage setCurrentPage={setCurrentPage} onAuthChange={handleAuthChange} />;
       case 'signup':
-        return <SignupPage setCurrentPage={setCurrentPage} onAuthChange={handleAuthChange} />;
+        return <SignupPage setCurrentPage={setCurrentPage} />;
       case 'dashboard':
-        return <Dashboard setCurrentPage={setCurrentPage} onAuthChange={handleAuthChange} />;
+        return <Dashboard setCurrentPage={setCurrentPage} />;
       default:
-        return <HomePage setCurrentPage={setCurrentPage} />;
+        return <LandingPage setCurrentPage={setCurrentPage} />;
     }
   };
 
-  // Don't show navbar on dashboard - it has its own navigation
-  const showNavbar = currentPage !== 'dashboard';
-  const showFooter = currentPage !== 'dashboard' && currentPage !== 'login' && currentPage !== 'signup';
+  // Don't show Navbar/Footer on login/signup pages
+  const showNavFooter = currentPage !== 'login' && currentPage !== 'signup';
 
   return (
     <div className="App">
-      {/* Conditional Navbar */}
-      {showNavbar && (
+      {showNavFooter && (
         <Navbar 
-          setCurrentPage={setCurrentPage} 
+          setCurrentPage={setCurrentPage}
           currentPage={currentPage}
           isAuthenticated={isAuthenticated}
         />
       )}
       
-      {/* Main Content */}
-      <main className="main-content">
+      <main>
         {renderPage()}
       </main>
       
-      {/* Conditional Footer */}
-      {showFooter && (
+      {showNavFooter && (
         <Footer setCurrentPage={setCurrentPage} />
       )}
     </div>

@@ -1,12 +1,13 @@
-
 ```
 DreamCrafter
+├─ README.md
 ├─ backend
 │  ├─ authentication
 │  │  ├─ __init__.py
 │  │  ├─ admin.py
 │  │  ├─ apps.py
 │  │  ├─ migrations
+│  │  │  ├─ 0001_initial.py
 │  │  │  └─ __init__.py
 │  │  ├─ models.py
 │  │  ├─ serializers.py
@@ -15,9 +16,6 @@ DreamCrafter
 │  │  └─ views.py
 │  ├─ backend
 │  │  ├─ __init__.py
-│  │  ├─ __pycache__
-│  │  │  ├─ __init__.cpython-312.pyc
-│  │  │  └─ settings.cpython-312.pyc
 │  │  ├─ asgi.py
 │  │  ├─ settings.py
 │  │  ├─ urls.py
@@ -25,7 +23,6 @@ DreamCrafter
 │  └─ manage.py
 ├─ dreamcrafter-app
 │  ├─ README.md
-│  ├─ package-lock.json
 │  ├─ package.json
 │  ├─ postcss.config.js
 │  ├─ public
@@ -41,11 +38,12 @@ DreamCrafter
 │  │  ├─ App.js
 │  │  ├─ App.test.js
 │  │  ├─ components
-│  │  │  ├─ common
+│  │  │  ├─ layout
 │  │  │  │  ├─ FloatingElement.js
 │  │  │  │  ├─ Footer.js
 │  │  │  │  └─ Navbar.js
 │  │  │  └─ pages
+│  │  │     ├─ Dashboard.js
 │  │  │     ├─ FeaturesPage.js
 │  │  │     ├─ HomePage.js
 │  │  │     ├─ LoginPage.js

@@ -1,215 +1,153 @@
-import React, { useState } from 'react';
-import { Moon, Sparkles, LogIn, Home, Zap, User, LogOut } from 'lucide-react';
+import React from 'react';
+import { Moon, Sparkles, Home, Zap, Newspaper, User, LogOut, Mail } from 'lucide-react';
 import AuthService from '../../services/auth';
+import styles from './Navbar.module.css'; // ✅ CORRECT CSS MODULE IMPORT
 
 const Navbar = ({ setCurrentPage, currentPage, isAuthenticated }) => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
   const handleLogout = async () => {
     const result = await AuthService.logout();
     if (result.success) {
-      setCurrentPage('home');
-      window.location.reload(); // Refresh to clear any cached state
+      setCurrentPage('landing');
+      window.location.reload();
     }
   };
 
-  const navItems = [
-    { 
-      id: 'home', 
-      label: 'Home', 
+  const navItems = isAuthenticated ? [
+    {
+      id: 'home',
+      label: 'Home',
       icon: Home,
       action: () => setCurrentPage('home')
     },
-    { 
-      id: 'features', 
+    {
+      id: 'features',
       label: 'Features', 
       icon: Zap,
       action: () => setCurrentPage('features')
+    },
+    {
+      id: 'news',
+      label: 'News',
+      icon: Newspaper,
+      action: () => document.getElementById('news')?.scrollIntoView({ behavior: 'smooth' })
+    }
+  ] : [
+    {
+      id: 'hero',
+      label: 'Home',
+      icon: Home,
+      action: () => document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' })
+    },
+    {
+      id: 'features',
+      label: 'Features',
+      icon: Zap,
+      action: () => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })
+    },
+    {
+      id: 'news',
+      label: 'News',
+      icon: Newspaper,
+      action: () => document.getElementById('news')?.scrollIntoView({ behavior: 'smooth' })
     }
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md shadow-lg border-b border-purple-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <div 
-            onClick={() => setCurrentPage('home')}
-            className="flex items-center space-x-3 cursor-pointer group"
-          >
-            <div className="relative">
-              <Moon className="w-8 h-8 text-purple-600 group-hover:text-purple-700 transition-colors duration-300" />
-              <Sparkles className="w-4 h-4 text-pink-500 absolute -top-1 -right-1 group-hover:text-pink-600 transition-colors duration-300" />
-            </div>
-            <div className="hidden sm:block">
-              <h1 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                DreamCrafter
-              </h1>
-              <p className="text-xs text-gray-500 -mt-1">A velvet lens on your inner world</p>
-            </div>
-          </div>
-
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            {/* Navigation Items */}
-            <div className="flex items-center space-x-6">
-              {navItems.map(({ id, label, icon: Icon, action }) => (
-                <button
-                  key={id}
-                  onClick={action}
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
-                    currentPage === id
-                      ? 'bg-purple-100 text-purple-700 shadow-sm'
-                      : 'text-gray-600 hover:text-purple-600 hover:bg-purple-50'
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  <span className="font-medium">{label}</span>
-                  {currentPage === id && (
-                    <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse" />
-                  )}
-                </button>
-              ))}
-            </div>
-
-            {/* Auth Buttons */}
-            <div className="flex items-center space-x-4 border-l border-gray-200 pl-6">
-              {isAuthenticated ? (
-                <div className="flex items-center space-x-4">
-                  <button
-                    onClick={() => setCurrentPage('dashboard')}
-                    className="flex items-center space-x-2 px-4 py-2 text-purple-600 hover:text-purple-700 transition-colors duration-300 hover:bg-purple-50 rounded-lg"
-                  >
-                    <User className="w-4 h-4" />
-                    <span>Dashboard</span>
-                  </button>
-                  <button
-                    onClick={handleLogout}
-                    className="flex items-center space-x-2 px-4 py-2 text-red-600 hover:text-red-700 transition-colors duration-300 hover:bg-red-50 rounded-lg"
-                  >
-                    <LogOut className="w-4 h-4" />
-                    <span>Logout</span>
-                  </button>
-                </div>
-              ) : (
-                <>
-                  <button
-                    onClick={() => setCurrentPage('login')}
-                    className={`flex items-center space-x-2 px-4 py-2 transition-all duration-300 rounded-lg ${
-                      currentPage === 'login'
-                        ? 'bg-purple-100 text-purple-700'
-                        : 'text-purple-600 hover:text-purple-700 hover:bg-purple-50'
-                    }`}
-                  >
-                    <LogIn className="w-4 h-4" />
-                    <span>Login</span>
-                  </button>
-                  <button
-                    onClick={() => setCurrentPage('signup')}
-                    className={`px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl ${
-                      currentPage === 'signup' ? 'scale-105 shadow-xl' : ''
-                    }`}
-                  >
-                    Sign Up
-                  </button>
-                </>
-              )}
-            </div>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden flex items-center justify-center w-10 h-10 rounded-lg hover:bg-purple-50 transition-colors duration-300"
-          >
-            <div className="flex flex-col space-y-1">
-              <div className={`w-5 h-0.5 bg-purple-600 transition-all duration-300 ${isMobileMenuOpen ? 'rotate-45 translate-y-1.5' : ''}`} />
-              <div className={`w-5 h-0.5 bg-purple-600 transition-all duration-300 ${isMobileMenuOpen ? 'opacity-0' : ''}`} />
-              <div className={`w-5 h-0.5 bg-purple-600 transition-all duration-300 ${isMobileMenuOpen ? '-rotate-45 -translate-y-1.5' : ''}`} />
-            </div>
-          </button>
-        </div>
-
-        {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-purple-100 bg-white/95 backdrop-blur-md">
-            <div className="flex flex-col space-y-2">
-              {navItems.map(({ id, label, icon: Icon, action }) => (
-                <button
-                  key={id}
-                  onClick={() => {
-                    action();
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-300 ${
-                    currentPage === id
-                      ? 'bg-purple-100 text-purple-700 shadow-sm'
-                      : 'text-gray-600 hover:text-purple-600 hover:bg-purple-50'
-                  }`}
-                >
-                  <Icon className="w-5 h-5" />
-                  <span className="font-medium">{label}</span>
-                  {currentPage === id && (
-                    <div className="w-2 h-2 bg-purple-500 rounded-full ml-auto animate-pulse" />
-                  )}
-                </button>
-              ))}
-              
-              <div className="border-t border-gray-200 pt-2 mt-2">
-                {isAuthenticated ? (
-                  <>
-                    <button
-                      onClick={() => {
-                        setCurrentPage('dashboard');
-                        setIsMobileMenuOpen(false);
-                      }}
-                      className="flex items-center space-x-3 px-4 py-3 rounded-lg text-purple-600 hover:text-purple-700 hover:bg-purple-50 transition-all duration-300 w-full"
-                    >
-                      <User className="w-5 h-5" />
-                      <span className="font-medium">Dashboard</span>
-                    </button>
-                    <button
-                      onClick={() => {
-                        handleLogout();
-                        setIsMobileMenuOpen(false);
-                      }}
-                      className="flex items-center space-x-3 px-4 py-3 rounded-lg text-red-600 hover:text-red-700 hover:bg-red-50 transition-all duration-300 w-full"
-                    >
-                      <LogOut className="w-5 h-5" />
-                      <span className="font-medium">Logout</span>
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <button
-                      onClick={() => {
-                        setCurrentPage('login');
-                        setIsMobileMenuOpen(false);
-                      }}
-                      className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-300 w-full ${
-                        currentPage === 'login'
-                          ? 'bg-purple-100 text-purple-700'
-                          : 'text-purple-600 hover:text-purple-700 hover:bg-purple-50'
-                      }`}
-                    >
-                      <LogIn className="w-5 h-5" />
-                      <span className="font-medium">Login</span>
-                    </button>
-                    <button
-                      onClick={() => {
-                        setCurrentPage('signup');
-                        setIsMobileMenuOpen(false);
-                      }}
-                      className="mx-4 my-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full hover:from-purple-600 hover:to-pink-600 transition-all duration-300 text-center font-medium shadow-lg"
-                    >
-                      Sign Up
-                    </button>
-                  </>
-                )}
+    <nav className={styles.navbarContainer}>
+      <div className={styles.navbarContent}>
+        {/* Logo Section with Velvet Theme */}
+        <div
+          onClick={() => setCurrentPage(isAuthenticated ? 'home' : 'landing')}
+          className={styles.logoSection}
+        >
+          <div className={styles.logoIconContainer}>
+            <div className={styles.logoMainCircle}>
+              <Moon className={styles.moonIcon} />
+              <div className={styles.sparkleOverlay}>
+                <Sparkles className={styles.sparkleIcon} />
               </div>
             </div>
+            <div className={styles.logoGlow}></div>
           </div>
-        )}
+          
+          <div className={styles.brandText}>
+            <h1 className={styles.siteName}>
+              <span className={styles.dreamText}>Dream</span>
+              <span className={styles.crafterText}>Crafter</span>
+            </h1>
+            <p className={styles.brandSlogan}>A velvet lens on your inner world</p>
+          </div>
+        </div>
+
+        {/* Navigation Icons */}
+        <div className={styles.navSection}>
+          <div className={styles.navIcons}>
+            {navItems.map(({ id, label, icon: Icon, action }) => (
+              <div
+                key={id}
+                onClick={action}
+                className={`${styles.navIconWrapper} ${currentPage === id ? styles.active : ''}`}
+                title={label}
+              >
+                <div className={styles.navIconCircle}>
+                  <Icon className={styles.navIcon} />
+                </div>
+                <span className={styles.navLabel}>{label}</span>
+                <div className={styles.navTooltip}>{label}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Auth Buttons */}
+          <div className={styles.authSection}>
+            {isAuthenticated ? (
+              <>
+                <button
+                  onClick={() => setCurrentPage('dashboard')}
+                  className={styles.dashboardButton}
+                  title="Dashboard"
+                >
+                  <User className={styles.authIcon} />
+                  <span>Dashboard</span>
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className={styles.logoutButton}
+                  title="Logout"
+                >
+                  <LogOut className={styles.authIcon} />
+                  <span>Logout</span>
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => setCurrentPage('login')}
+                  className={styles.loginButton}
+                >
+                  <Mail className={styles.authIcon} />
+                  <span>Login</span>
+                  <div className={styles.buttonShine}></div>
+                </button>
+                <button
+                  onClick={() => setCurrentPage('signup')}
+                  className={styles.signupButton}
+                >
+                  <User className={styles.authIcon} />
+                  <span>Sign Up</span>
+                  <div className={styles.buttonShine}></div>
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Mobile Menu Button */}
+        <div className={styles.mobileMenuButton}>
+          <div className={styles.hamburgerLine}></div>
+          <div className={styles.hamburgerLine}></div>
+          <div className={styles.hamburgerLine}></div>
+        </div>
       </div>
     </nav>
   );
