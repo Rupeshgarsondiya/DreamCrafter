@@ -126,7 +126,7 @@
 
 /* Title Section - FIXED */
 .titleSection {
-  padding: 3rem 2rem 1rem;
+  padding:  0.1rem 0.1rem;
   text-align: center;
   z-index: 10;
   position: relative;
@@ -1631,7 +1631,7 @@
   }
   
   .homeSection, .featuresSection, .newsSection, .videoSection, .finalCtaSection {
-    padding: 3rem 0.5rem;
+     scroll-margin-top: 85px;
   }
   
   .brainContainer {
@@ -1768,7 +1768,7 @@ body, html {
 /* FIXED: Proper section spacing to prevent overlaps */
 .homeSection {
   min-height: 100vh;
-  padding-top: 80px; /* ✅ FIX: Account for fixed navbar */
+  padding-top: 85px; /* ✅ FIX: Account for fixed navbar */
   scroll-margin-top: 80px; /* ✅ FIX: Smooth scroll offset */
 }
 
@@ -1930,52 +1930,32 @@ body, html {
   margin-top: 0.3rem;
 }
 
-/* ✅ RESPONSIVE VIDEO LAYOUT */
 @media (max-width: 1024px) {
-  .videoContainer {
-    grid-template-columns: 1fr;
-    gap: 3rem;
+  .homeSection {
+    padding-top: 80px;
   }
   
-  .videoPlayerSide {
-    order: 1;
-  }
-  
-  .videoDescriptionSide {
-    order: 2;
+  .featuresSection, .newsSection, .videoSection, .finalCtaSection {
+    scroll-margin-top: 80px;
   }
 }
 
 @media (max-width: 768px) {
-  .videoContainer {
-    gap: 2rem;
+  .homeSection {
+    padding-top: 75px;
   }
   
-  .videoPlaceholder {
-    height: 280px;
+  .featuresSection, .newsSection, .videoSection, .finalCtaSection {
+    scroll-margin-top: 75px;
   }
-  
-  .videoStats {
-    flex-direction: column;
-    gap: 1rem;
-  }
-  
-  .statItem {
-    text-align: left;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-}
-.homeSection {
-  min-height: 100vh;
-  padding-top: 70px; /* ✅ This fixes the navbar overlap */
-  scroll-margin-top: 70px;
-  /* ... rest of your existing styles */
 }
 
-.featuresSection, .newsSection, .videoSection, .finalCtaSection {
-  scroll-margin-top: 70px; /* ✅ This fixes smooth scrolling */
-  /* ... rest of your existing styles */
+@media (max-width: 480px) {
+  .homeSection {
+    padding-top: 70px;
+  }
+  
+  .featuresSection, .newsSection, .videoSection, .finalCtaSection {
+    scroll-margin-top: 85px;
+  }
 }
-

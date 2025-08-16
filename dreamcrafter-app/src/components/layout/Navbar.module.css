@@ -1,18 +1,22 @@
-/* 100% RESPONSIVE NAVBAR - GUARANTEED */
+/* ENHANCED RESPONSIVE NAVBAR - LARGER & MORE PROMINENT */
+
 .navbar {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  height: 70px;
+  height: 85px; /* ✅ INCREASED from 70px to 85px */
   background: linear-gradient(135deg,
     rgba(255, 251, 247, 0.98) 0%,
-    rgba(250, 245, 255, 0.98) 100%
+    rgba(250, 245, 255, 0.98) 50%,
+    rgba(248, 250, 255, 0.98) 100%
   );
-  backdrop-filter: blur(20px);
-  border-bottom: 2px solid rgba(165, 105, 189, 0.2);
+  backdrop-filter: blur(25px); /* ✅ ENHANCED blur */
+  border-bottom: 3px solid rgba(165, 105, 189, 0.25); /* ✅ THICKER border */
   z-index: 1000;
-  box-shadow: 0 4px 20px rgba(165, 105, 189, 0.1);
+  box-shadow: 
+    0 6px 25px rgba(165, 105, 189, 0.15),
+    0 3px 12px rgba(210, 105, 30, 0.08); /* ✅ ENHANCED shadow */
 }
 
 .container {
@@ -22,185 +26,250 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 1rem;
+  padding: 0 2rem; /* ✅ INCREASED padding from 1rem to 2rem */
   box-sizing: border-box;
 }
 
-/* Logo - Always Responsive */
+/* ENHANCED Logo - Larger & More Prominent */
 .logo {
   display: flex;
   align-items: center;
-  gap: 0.8rem;
+  gap: 1.2rem; /* ✅ INCREASED gap */
   cursor: pointer;
   flex-shrink: 0;
   transition: transform 0.3s ease;
 }
 
 .logo:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px); /* ✅ ENHANCED hover effect */
 }
 
 .logoIcon {
   position: relative;
-  width: 40px;
-  height: 40px;
-  background: linear-gradient(135deg, #A569BD, #D2691E);
+  width: 55px; /* ✅ INCREASED from 40px to 55px */
+  height: 55px;
+  background: linear-gradient(135deg, 
+    #A569BD 0%, 
+    #D2691E 50%, 
+    #CD853F 100%
+  );
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  box-shadow: 0 4px 15px rgba(165, 105, 189, 0.3);
+  box-shadow: 
+    0 6px 20px rgba(165, 105, 189, 0.35),
+    0 3px 10px rgba(210, 105, 30, 0.2),
+    inset 0 2px 8px rgba(255, 255, 255, 0.3); /* ✅ ENHANCED shadow */
   flex-shrink: 0;
+  border: 2px solid rgba(255, 255, 255, 0.4); /* ✅ ADDED border */
 }
 
 .moonIcon {
-  width: 20px;
-  height: 20px;
+  width: 28px; /* ✅ INCREASED from 20px to 28px */
+  height: 28px;
+  animation: logoRotate 20s linear infinite; /* ✅ ADDED rotation */
+}
+
+@keyframes logoRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 .sparkle {
   position: absolute;
-  top: -3px;
-  right: -3px;
-  width: 14px;
-  height: 14px;
-  background: #FFD700;
+  top: -4px; /* ✅ ADJUSTED position */
+  right: -4px;
+  width: 20px; /* ✅ INCREASED from 14px to 20px */
+  height: 20px;
+  background: linear-gradient(45deg, #FFD700, #FFA500); /* ✅ ENHANCED gradient */
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
+  border: 2px solid rgba(255, 255, 255, 0.6); /* ✅ ADDED border */
+  animation: sparkleFloat 3s ease-in-out infinite; /* ✅ ADDED animation */
+}
+
+@keyframes sparkleFloat {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1) rotate(180deg);
+    opacity: 0.8;
+  }
 }
 
 .sparkleIcon {
-  width: 8px;
-  height: 8px;
+  width: 12px; /* ✅ INCREASED from 8px to 12px */
+  height: 12px;
 }
 
 .logoText {
   font-family: Georgia, serif;
-  font-size: 1.4rem;
+  font-size: 1.8rem; /* ✅ INCREASED from 1.4rem to 1.8rem */
   font-weight: 700;
   display: flex;
   align-items: baseline;
+  gap: 0.2rem;
+  text-shadow: 0 2px 8px rgba(165, 105, 189, 0.2); /* ✅ ADDED text shadow */
 }
 
 .dream {
-  background: linear-gradient(135deg, #8B4513, #D2691E);
+  background: linear-gradient(135deg, #8B4513, #D2691E, #CD853F);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  background-size: 200% 200%;
+  animation: textShimmer 4s ease-in-out infinite; /* ✅ ADDED shimmer */
 }
 
 .crafter {
-  background: linear-gradient(135deg, #A569BD, #9370DB);
+  background: linear-gradient(135deg, #A569BD, #9370DB, #DDA0DD);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  background-size: 200% 200%;
+  animation: textShimmer 4s ease-in-out infinite;
+  animation-delay: -2s;
 }
 
-/* Desktop Navigation - Hidden on Mobile */
+@keyframes textShimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* ENHANCED Desktop Navigation */
 .desktopNav {
   display: flex;
-  gap: 1rem;
+  gap: 1.5rem; /* ✅ INCREASED gap */
   align-items: center;
 }
 
 .navItem {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  background: rgba(255, 255, 255, 0.5);
-  border: 1px solid rgba(165, 105, 189, 0.3);
-  border-radius: 20px;
+  gap: 0.8rem; /* ✅ INCREASED gap */
+  padding: 0.8rem 1.5rem; /* ✅ INCREASED padding */
+  background: rgba(255, 255, 255, 0.6);
+  border: 2px solid rgba(165, 105, 189, 0.3); /* ✅ THICKER border */
+  border-radius: 25px; /* ✅ MORE rounded */
   color: #8B4513;
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: Georgia, serif;
-  font-weight: 500;
-  font-size: 0.9rem;
+  font-weight: 600; /* ✅ INCREASED weight */
+  font-size: 1rem; /* ✅ INCREASED from 0.9rem */
+  box-shadow: 0 3px 10px rgba(165, 105, 189, 0.1); /* ✅ ADDED shadow */
 }
 
 .navItem:hover {
-  background: rgba(165, 105, 189, 0.1);
+  background: rgba(165, 105, 189, 0.15);
   border-color: #A569BD;
   color: #A569BD;
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(165, 105, 189, 0.2); /* ✅ ENHANCED hover shadow */
 }
 
-/* Desktop Auth - Hidden on Mobile */
+.navItem svg {
+  width: 20px; /* ✅ INCREASED icon size */
+  height: 20px;
+}
+
+/* ENHANCED Desktop Auth */
 .desktopAuth {
   display: flex;
-  gap: 0.8rem;
+  gap: 1.2rem; /* ✅ INCREASED gap */
   align-items: center;
 }
 
 .authBtn, .signupBtn {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
+  gap: 0.6rem; /* ✅ INCREASED gap */
+  padding: 0.8rem 1.5rem; /* ✅ INCREASED padding */
+  border-radius: 25px; /* ✅ MORE rounded */
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: Georgia, serif;
   font-weight: 600;
   border: none;
-  font-size: 0.85rem;
+  font-size: 1rem; /* ✅ INCREASED font size */
+  box-shadow: 0 3px 10px rgba(165, 105, 189, 0.1); /* ✅ ADDED shadow */
 }
 
 .authBtn {
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.8);
   color: #8B4513;
-  border: 1px solid rgba(165, 105, 189, 0.3);
+  border: 2px solid rgba(165, 105, 189, 0.3); /* ✅ THICKER border */
 }
 
 .authBtn:hover {
-  background: rgba(165, 105, 189, 0.1);
+  background: rgba(165, 105, 189, 0.15);
   color: #A569BD;
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(165, 105, 189, 0.2); /* ✅ ENHANCED shadow */
 }
 
 .signupBtn {
   background: linear-gradient(135deg, #A569BD, #D2691E);
   color: white;
+  border: 2px solid rgba(255, 255, 255, 0.2); /* ✅ ADDED border */
 }
 
 .signupBtn:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 6px 20px rgba(165, 105, 189, 0.3);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 
+    0 8px 25px rgba(165, 105, 189, 0.4),
+    0 4px 12px rgba(210, 105, 30, 0.2); /* ✅ ENHANCED shadow */
 }
 
-/* Mobile Toggle - Only Visible on Mobile */
+.authBtn svg, .signupBtn svg {
+  width: 18px; /* ✅ INCREASED icon size */
+  height: 18px;
+}
+
+/* ENHANCED Mobile Toggle */
 .mobileToggle {
   display: none;
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(165, 105, 189, 0.3);
-  border-radius: 8px;
-  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.8);
+  border: 2px solid rgba(165, 105, 189, 0.3); /* ✅ THICKER border */
+  border-radius: 12px; /* ✅ MORE rounded */
+  padding: 0.8rem; /* ✅ INCREASED padding */
   color: #8B4513;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(165, 105, 189, 0.1); /* ✅ ADDED shadow */
 }
 
 .mobileToggle:hover {
-  background: rgba(165, 105, 189, 0.1);
+  background: rgba(165, 105, 189, 0.15);
   color: #A569BD;
+  transform: translateY(-2px);
 }
 
-/* Mobile Menu */
+.mobileToggle svg {
+  width: 24px; /* ✅ INCREASED icon size */
+  height: 24px;
+}
+
+/* ENHANCED Mobile Menu */
 .mobileMenu {
   position: absolute;
   top: 100%;
   left: 0;
   right: 0;
   background: rgba(255, 251, 247, 0.98);
-  backdrop-filter: blur(20px);
-  border-bottom: 2px solid rgba(165, 105, 189, 0.2);
-  padding: 1rem;
-  box-shadow: 0 4px 20px rgba(165, 105, 189, 0.1);
+  backdrop-filter: blur(25px);
+  border-bottom: 3px solid rgba(165, 105, 189, 0.25); /* ✅ THICKER border */
+  padding: 1.5rem; /* ✅ INCREASED padding */
+  box-shadow: 
+    0 6px 25px rgba(165, 105, 189, 0.15),
+    0 3px 12px rgba(210, 105, 30, 0.08); /* ✅ ENHANCED shadow */
   max-height: 80vh;
   overflow-y: auto;
 }
@@ -208,149 +277,229 @@
 .mobileNav {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+  gap: 0.8rem; /* ✅ INCREASED gap */
+  margin-bottom: 1.5rem; /* ✅ INCREASED margin */
 }
 
 .mobileNavItem {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(165, 105, 189, 0.2);
-  border-radius: 12px;
+  gap: 1.2rem; /* ✅ INCREASED gap */
+  padding: 1.2rem; /* ✅ INCREASED padding */
+  background: rgba(255, 255, 255, 0.8);
+  border: 2px solid rgba(165, 105, 189, 0.2); /* ✅ THICKER border */
+  border-radius: 15px; /* ✅ MORE rounded */
   color: #8B4513;
   cursor: pointer;
   font-family: Georgia, serif;
-  font-weight: 500;
+  font-weight: 600; /* ✅ INCREASED weight */
+  font-size: 1.1rem; /* ✅ INCREASED font size */
   transition: all 0.3s ease;
   text-align: left;
   width: 100%;
   box-sizing: border-box;
+  box-shadow: 0 2px 8px rgba(165, 105, 189, 0.1); /* ✅ ADDED shadow */
 }
 
 .mobileNavItem:hover {
-  background: rgba(165, 105, 189, 0.1);
+  background: rgba(165, 105, 189, 0.15);
   color: #A569BD;
+  transform: translateY(-2px);
+}
+
+.mobileNavItem svg {
+  width: 22px; /* ✅ INCREASED icon size */
+  height: 22px;
 }
 
 .mobileAuth {
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
-  border-top: 1px solid rgba(165, 105, 189, 0.2);
-  padding-top: 1rem;
+  gap: 1rem; /* ✅ INCREASED gap */
+  border-top: 2px solid rgba(165, 105, 189, 0.2); /* ✅ THICKER border */
+  padding-top: 1.5rem; /* ✅ INCREASED padding */
 }
 
 .mobileAuthBtn, .mobileSignupBtn {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  border-radius: 12px;
+  gap: 1.2rem; /* ✅ INCREASED gap */
+  padding: 1.2rem; /* ✅ INCREASED padding */
+  border-radius: 15px; /* ✅ MORE rounded */
   cursor: pointer;
   font-family: Georgia, serif;
   font-weight: 600;
+  font-size: 1.1rem; /* ✅ INCREASED font size */
   border: none;
   transition: all 0.3s ease;
   text-align: left;
   width: 100%;
   box-sizing: border-box;
+  box-shadow: 0 2px 8px rgba(165, 105, 189, 0.1); /* ✅ ADDED shadow */
 }
 
 .mobileAuthBtn {
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.8);
   color: #8B4513;
-  border: 1px solid rgba(165, 105, 189, 0.3);
+  border: 2px solid rgba(165, 105, 189, 0.3); /* ✅ THICKER border */
 }
 
 .mobileAuthBtn:hover {
-  background: rgba(165, 105, 189, 0.1);
+  background: rgba(165, 105, 189, 0.15);
   color: #A569BD;
+  transform: translateY(-2px);
 }
 
 .mobileSignupBtn {
   background: linear-gradient(135deg, #A569BD, #D2691E);
   color: white;
+  border: 2px solid rgba(255, 255, 255, 0.2); /* ✅ ADDED border */
 }
 
 .mobileSignupBtn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(165, 105, 189, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 
+    0 6px 20px rgba(165, 105, 189, 0.4),
+    0 3px 10px rgba(210, 105, 30, 0.2); /* ✅ ENHANCED shadow */
 }
 
-/* ✅ RESPONSIVE BREAKPOINTS - 100% GUARANTEED */
+.mobileAuthBtn svg, .mobileSignupBtn svg {
+  width: 22px; /* ✅ INCREASED icon size */
+  height: 22px;
+}
+
+/* ✅ ENHANCED RESPONSIVE BREAKPOINTS */
+
+/* Tablet adjustments */
+@media (max-width: 1024px) {
+  .navbar {
+    height: 80px; /* ✅ Slightly smaller for tablets */
+  }
+  
+  .logoIcon {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .moonIcon {
+    width: 25px;
+    height: 25px;
+  }
+  
+  .logoText {
+    font-size: 1.6rem;
+  }
+}
 
 /* Hide desktop nav on tablets and mobile */
 @media (max-width: 768px) {
   .desktopNav, .desktopAuth {
     display: none;
   }
-  
+
   .mobileToggle {
     display: block;
   }
+
+  .navbar {
+    height: 75px; /* ✅ Adjusted for mobile */
+  }
   
+  .container {
+    padding: 0 1.5rem; /* ✅ Adjusted mobile padding */
+  }
+
+  .logoText {
+    font-size: 1.4rem;
+  }
+
+  .logoIcon {
+    width: 45px;
+    height: 45px;
+  }
+
+  .moonIcon {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    height: 70px; /* ✅ Compact for small screens */
+  }
+  
+  .container {
+    padding: 0 1rem;
+  }
+
+  .logoText {
+    font-size: 1.3rem;
+  }
+
+  .logoIcon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .moonIcon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .sparkle {
+    width: 16px;
+    height: 16px;
+    top: -3px;
+    right: -3px;
+  }
+
+  .sparkleIcon {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+@media (max-width: 375px) {
   .logoText {
     font-size: 1.2rem;
   }
-  
+
   .logoIcon {
-    width: 35px;
-    height: 35px;
+    width: 38px;
+    height: 38px;
   }
-  
+
   .moonIcon {
     width: 18px;
     height: 18px;
   }
 }
 
-@media (max-width: 480px) {
-  .container {
-    padding: 0 0.5rem;
-  }
-  
-  .logoText {
-    font-size: 1.1rem;
-  }
-  
-  .logoIcon {
-    width: 32px;
-    height: 32px;
-  }
-  
-  .moonIcon {
-    width: 16px;
-    height: 16px;
-  }
-  
-  .sparkle {
-    width: 12px;
-    height: 12px;
-    top: -2px;
-    right: -2px;
-  }
-  
-  .sparkleIcon {
-    width: 6px;
-    height: 6px;
+/* ✅ SMOOTH ANIMATIONS FOR ENHANCED UX */
+.navbar * {
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* ✅ ENSURE PROPER SPACING FOR LARGER NAVBAR */
+body {
+  padding-top: 85px; /* ✅ Match navbar height */
+}
+
+@media (max-width: 1024px) {
+  body {
+    padding-top: 80px;
   }
 }
 
-@media (max-width: 375px) {
-  .logoText {
-    font-size: 1rem;
+@media (max-width: 768px) {
+  body {
+    padding-top: 75px;
   }
-  
-  .logoIcon {
-    width: 30px;
-    height: 30px;
-  }
-  
-  .moonIcon {
-    width: 15px;
-    height: 15px;
+}
+
+@media (max-width: 480px) {
+  body {
+    padding-top: 70px;
   }
 }

@@ -1,0 +1,117 @@
+🌙 EEG DREAM DECODING RESULTS - ENGLISH OUTPUT
+============================================================
+
+File: S002R02_features.h5
+Epoch: 0
+Dream Text: vision magic magic magic magic realm spirit spirit mystery essence mystery mystery mystery spirit essence essence essence magic magic magic
+Confidence: 0.000
+Raw Tokens: [2671, 3276, 3276, 3276, 3276, 2347, 703, 703, 4330, 612, 3090, 3090, 3090, 1103, 4812, 4812, 1302, 3276, 3276, 3276]
+--------------------------------------------------
+File: S002R02_features.h5
+Epoch: 1
+Dream Text: magic vision magic magic magic realm spirit magic spirit essence magic magic essence magic magic essence experience experience experience realm
+Confidence: 0.000
+Raw Tokens: [4286, 2671, 3276, 3276, 3276, 2347, 703, 3276, 703, 3462, 3276, 3276, 3082, 3276, 3276, 3082, 3069, 3069, 3069, 2817]
+--------------------------------------------------
+File: S002R02_features.h5
+Epoch: 2
+Dream Text: magic vision magic magic magic realm spirit spirit mystery essence mystery mystery mystery spirit essence essence essence magic magic magic
+Confidence: 0.000
+Raw Tokens: [4286, 2671, 3276, 3276, 3276, 2347, 703, 703, 4330, 612, 3090, 3090, 3090, 1103, 4812, 4812, 1302, 3276, 3276, 3276]
+--------------------------------------------------
+File: S001R01_features.h5
+Epoch: 0
+Dream Text: magic vision realm essence realm dimension essence spirit essence essence essence wonder wonder magic vision vision magic magic magic essence
+Confidence: 0.000
+Raw Tokens: [4286, 3101, 1897, 612, 3117, 3388, 1302, 1353, 4532, 4532, 612, 2035, 2035, 4416, 451, 2671, 3276, 3276, 3276, 3082]
+--------------------------------------------------
+File: S001R01_features.h5
+Epoch: 1
+Dream Text: magic vision magic realm magic magic magic realm spirit magic magic spirit essence magic essence magic magic essence experience experience
+Confidence: 0.000
+Raw Tokens: [4286, 3101, 3276, 1897, 3276, 3276, 3276, 2347, 703, 3276, 3276, 703, 3462, 3276, 3082, 3276, 3276, 3082, 3069, 3069]
+--------------------------------------------------
+File: S001R01_features.h5
+Epoch: 2
+Dream Text: magic vision realm magic magic magic magic realm spirit magic magic experience essence essence magic essence magic magic essence magic
+Confidence: 0.000
+Raw Tokens: [4286, 3101, 1897, 3276, 3276, 3276, 3276, 2347, 703, 3276, 3276, 1369, 3462, 3462, 3276, 3082, 3276, 3276, 3082, 3276]
+--------------------------------------------------
+File: S002R04_features.h5
+Epoch: 0
+Dream Text: magic vision magic magic magic realm spirit spirit mystery essence mystery mystery mystery spirit essence essence essence magic magic magic
+Confidence: 0.000
+Raw Tokens: [4286, 2671, 3276, 3276, 3276, 2347, 703, 703, 4330, 612, 3090, 3090, 3090, 1103, 4812, 4812, 1302, 3276, 3276, 3276]
+--------------------------------------------------
+File: S002R04_features.h5
+Epoch: 1
+Dream Text: magic vision magic magic magic realm spirit spirit mystery essence mystery mystery mystery spirit essence essence essence magic magic magic
+Confidence: 0.000
+Raw Tokens: [4286, 2671, 3276, 3276, 3276, 2347, 703, 703, 4330, 612, 3090, 3090, 3090, 1103, 4812, 4812, 1302, 3276, 3276, 3276]
+--------------------------------------------------
+File: S002R04_features.h5
+Epoch: 2
+Dream Text: magic vision realm essence realm dimension essence spirit essence essence essence wonder wonder magic vision vision magic magic magic essence
+Confidence: 0.000
+Raw Tokens: [4286, 3101, 1897, 612, 3117, 3388, 1302, 1353, 4532, 4532, 612, 2035, 2035, 4416, 451, 2671, 3276, 3276, 3276, 3082]
+--------------------------------------------------
+File: S002R04_features.h5
+Epoch: 3
+Dream Text: magic magic magic magic realm experience essence magic magic magic essence realm realm magic experience realm magic magic magic magic
+Confidence: 0.000
+Raw Tokens: [4286, 3276, 3276, 3276, 2347, 1369, 3462, 3276, 3276, 3276, 3082, 4517, 4517, 4506, 4629, 2137, 3276, 3276, 3276, 3276]
+--------------------------------------------------
+File: S002R04_features.h5
+Epoch: 4
+Dream Text: magic vision magic magic magic realm experience essence essence experience essence essence essence essence magic magic magic essence magic magic
+Confidence: 0.000
+Raw Tokens: [4286, 3101, 3276, 3276, 3276, 2347, 1369, 3462, 612, 1369, 3462, 2722, 4532, 4532, 3276, 3276, 3276, 3082, 3276, 3276]
+--------------------------------------------------
+File: S002R04_features.h5
+Epoch: 5
+Dream Text: essence magic dimension realm spirit magic magic magic realm experience experience essence realm realm magic realm realm dimension magic magic
+Confidence: 0.000
+Raw Tokens: [612, 3276, 1378, 3117, 633, 3276, 3276, 3276, 2347, 1369, 1369, 3462, 4517, 4517, 4506, 2137, 2137, 818, 3276, 3276]
+--------------------------------------------------
+File: S002R04_features.h5
+Epoch: 6
+Dream Text: magic magic magic magic magic realm experience essence realm essence dimension essence essence calm magic magic magic magic essence magic
+Confidence: 0.000
+Raw Tokens: [4286, 3276, 3276, 3276, 3276, 2347, 1369, 3462, 4517, 612, 3828, 1302, 1302, 62, 1596, 3276, 3276, 3276, 3082, 3276]
+--------------------------------------------------
+File: S005R01_features.h5
+Epoch: 0
+Dream Text: magic vision magic magic magic magic realm spirit spirit mystery essence mystery mystery mystery spirit essence essence essence magic magic
+Confidence: 0.000
+Raw Tokens: [4286, 2671, 3276, 3276, 3276, 3276, 2347, 703, 703, 4330, 612, 3090, 3090, 3090, 1103, 4812, 4812, 1302, 3276, 3276]
+--------------------------------------------------
+File: S005R01_features.h5
+Epoch: 1
+Dream Text: spirit magic magic magic magic magic realm spirit spirit essence magic magic magic essence magic magic essence experience experience experience
+Confidence: 0.000
+Raw Tokens: [4753, 3276, 3276, 3276, 3276, 3276, 2347, 703, 703, 3462, 3276, 3276, 3276, 3082, 3276, 3276, 3082, 3069, 3069, 3069]
+--------------------------------------------------
+File: S005R01_features.h5
+Epoch: 2
+Dream Text: magic magic magic magic dimension magic experience essence magic essence magic magic essence magic magic essence experience experience experience realm
+Confidence: 0.000
+Raw Tokens: [4286, 3276, 3276, 3276, 1378, 3276, 1369, 3462, 3276, 3082, 3276, 3276, 3082, 3276, 3276, 3082, 3069, 3069, 3069, 2817]
+--------------------------------------------------
+File: S003R02_features.h5
+Epoch: 0
+Dream Text: magic vision magic magic magic realm spirit magic magic experience essence dimension essence magic magic magic essence magic magic essence
+Confidence: 0.000
+Raw Tokens: [4286, 2671, 3276, 3276, 3276, 2347, 703, 3276, 3276, 1369, 3462, 1378, 3082, 3276, 3276, 3276, 3082, 3276, 3276, 3082]
+--------------------------------------------------
+File: S003R02_features.h5
+Epoch: 1
+Dream Text: magic vision magic magic magic realm experience essence essence experience essence essence essence essence magic magic magic essence magic magic
+Confidence: 0.000
+Raw Tokens: [4286, 3101, 3276, 3276, 3276, 2347, 1369, 3462, 612, 1369, 3462, 2722, 4532, 4532, 3276, 3276, 3276, 3082, 3276, 3276]
+--------------------------------------------------
+File: S003R02_features.h5
+Epoch: 2
+Dream Text: magic vision realm magic magic magic magic realm spirit magic magic experience essence magic magic essence realm realm magic experience
+Confidence: 0.000
+Raw Tokens: [4286, 3101, 1897, 3276, 3276, 3276, 3276, 2347, 703, 3276, 3276, 1369, 3462, 3276, 3276, 3082, 4517, 4517, 4506, 4629]
+--------------------------------------------------

@@ -1,0 +1,136 @@
+🌙 EEG DREAM DECODING RESULTS - CONFIDENCE FIXED
+======================================================================
+
+File: S002R02_features.h5
+Epoch: 0
+Dream Text: vision energy touch touch light touch light feel mystery night dim magic essence touch touch touch light feel end end
+Confidence: 0.000222
+Raw Tokens: [3651, 2518, 795, 795, 3923, 795, 3923, 1212, 476, 4507, 1826, 1972, 2635, 795, 795, 795, 3923, 1212, 4082, 4082]
+Logits Stats: {'min': -0.2674288749694824, 'max': 0.17631882429122925, 'mean': -0.04268122836947441, 'std': 0.0658346489071846}
+------------------------------------------------------------
+File: S002R02_features.h5
+Epoch: 1
+Dream Text: vision energy touch touch light touch light feel mystery night dim magic essence touch touch touch light feel end end
+Confidence: 0.000222
+Raw Tokens: [3651, 2518, 795, 795, 3923, 795, 3923, 1212, 476, 4507, 1826, 1972, 2635, 795, 795, 795, 3923, 1212, 4082, 4082]
+Logits Stats: {'min': -0.2674035131931305, 'max': 0.17391571402549744, 'mean': -0.042875081300735474, 'std': 0.06594395637512207}
+------------------------------------------------------------
+File: S002R02_features.h5
+Epoch: 2
+Dream Text: vision energy touch touch light touch light feel mystery night dim magic essence touch touch touch light feel end end
+Confidence: 0.000224
+Raw Tokens: [3651, 2518, 795, 795, 3923, 795, 3923, 1212, 476, 4507, 1826, 1972, 2635, 795, 795, 795, 3923, 1212, 4082, 4082]
+Logits Stats: {'min': -0.26740384101867676, 'max': 0.18709515035152435, 'mean': -0.04305025190114975, 'std': 0.0660022497177124}
+------------------------------------------------------------
+File: S001R01_features.h5
+Epoch: 0
+Dream Text: end end rise rise rise feel rise feel mystery mystery rise rise feel mystery mystery black black float black float
+Confidence: 0.000222
+Raw Tokens: [4082, 4082, 4582, 4582, 4582, 1212, 4582, 1212, 4256, 4256, 4582, 4582, 1212, 4256, 4256, 2312, 2312, 2120, 2312, 2120]
+Logits Stats: {'min': -0.3289593458175659, 'max': 0.16426309943199158, 'mean': -0.04820684343576431, 'std': 0.06906270235776901}
+------------------------------------------------------------
+File: S001R01_features.h5
+Epoch: 1
+Dream Text: end end rise rise rise feel rise feel mystery mystery rise rise feel mystery mystery black black float black float
+Confidence: 0.000223
+Raw Tokens: [4082, 4082, 4582, 4582, 4582, 1212, 4582, 1212, 4256, 4256, 4582, 4582, 1212, 4256, 4256, 2312, 2312, 2120, 2312, 2120]
+Logits Stats: {'min': -0.32896146178245544, 'max': 0.17796768248081207, 'mean': -0.04813571274280548, 'std': 0.06908747553825378}
+------------------------------------------------------------
+File: S001R01_features.h5
+Epoch: 2
+Dream Text: end end rise rise rise feel rise feel mystery mystery rise rise feel mystery mystery black black float black float
+Confidence: 0.000222
+Raw Tokens: [4082, 4082, 4582, 4582, 4582, 1212, 4582, 1212, 4256, 4256, 4582, 4582, 1212, 4256, 4256, 2312, 2312, 2120, 2312, 2120]
+Logits Stats: {'min': -0.3289603292942047, 'max': 0.1691504716873169, 'mean': -0.04811014607548714, 'std': 0.06896079331636429}
+------------------------------------------------------------
+File: S002R04_features.h5
+Epoch: 0
+Dream Text: vision dim light black black touch touch light touch light night feel mystery mystery dim dim black black float black
+Confidence: 0.000222
+Raw Tokens: [3651, 1826, 3923, 2312, 2312, 795, 795, 3923, 795, 3923, 2647, 1212, 476, 476, 1826, 1826, 2312, 2312, 2120, 2312]
+Logits Stats: {'min': -0.3106948733329773, 'max': 0.16789975762367249, 'mean': -0.04555872455239296, 'std': 0.06767211854457855}
+------------------------------------------------------------
+File: S002R04_features.h5
+Epoch: 1
+Dream Text: vision end rise rise feel rise rise feel mystery mystery rise rise feel mystery mystery black black float black float
+Confidence: 0.000222
+Raw Tokens: [3651, 4082, 4582, 4582, 1212, 4582, 4582, 1212, 4256, 4256, 4582, 4582, 1212, 4256, 4256, 2312, 2312, 2120, 2312, 2120]
+Logits Stats: {'min': -0.32901284098625183, 'max': 0.1625615507364273, 'mean': -0.047496240586042404, 'std': 0.0686027929186821}
+------------------------------------------------------------
+File: S002R04_features.h5
+Epoch: 2
+Dream Text: end end rise rise rise feel rise feel mystery mystery rise rise feel mystery mystery black black float black float
+Confidence: 0.000222
+Raw Tokens: [4082, 4082, 4582, 4582, 4582, 1212, 4582, 1212, 4256, 4256, 4582, 4582, 1212, 4256, 4256, 2312, 2312, 2120, 2312, 2120]
+Logits Stats: {'min': -0.32896268367767334, 'max': 0.16820168495178223, 'mean': -0.04764457046985626, 'std': 0.06882600486278534}
+------------------------------------------------------------
+File: S002R04_features.h5
+Epoch: 3
+Dream Text: rest end end rise rise rise feel rise feel mystery rise rise feel mystery mystery rise rise feel mystery mystery
+Confidence: 0.000223
+Raw Tokens: [1565, 4082, 4082, 4582, 4582, 4582, 1212, 4582, 1212, 4256, 4582, 4582, 1212, 4256, 4256, 4582, 4582, 1212, 4256, 4256]
+Logits Stats: {'min': -0.28911179304122925, 'max': 0.17594395577907562, 'mean': -0.04577916860580444, 'std': 0.06802404671907425}
+------------------------------------------------------------
+File: S002R04_features.h5
+Epoch: 4
+Dream Text: rest end end rise rise rise feel rise feel mystery rise rise feel mystery mystery rise rise feel mystery mystery
+Confidence: 0.000223
+Raw Tokens: [1565, 4082, 4082, 4582, 4582, 4582, 1212, 4582, 1212, 4256, 4582, 4582, 1212, 4256, 4256, 4582, 4582, 1212, 4256, 4256]
+Logits Stats: {'min': -0.28911271691322327, 'max': 0.17474423348903656, 'mean': -0.04592018574476242, 'std': 0.06806069612503052}
+------------------------------------------------------------
+File: S002R04_features.h5
+Epoch: 5
+Dream Text: end end rise rise rise feel rise feel mystery mystery rise rise feel mystery mystery black black float black float
+Confidence: 0.000222
+Raw Tokens: [4082, 4082, 4582, 4582, 4582, 1212, 4582, 1212, 4256, 4256, 4582, 4582, 1212, 4256, 4256, 2312, 2312, 2120, 2312, 2120]
+Logits Stats: {'min': -0.32896173000335693, 'max': 0.16378474235534668, 'mean': -0.047716833651065826, 'std': 0.06886053830385208}
+------------------------------------------------------------
+File: S002R04_features.h5
+Epoch: 6
+Dream Text: vision end rise rise feel rise rise feel mystery mystery rise rise feel mystery mystery black black float black float
+Confidence: 0.000222
+Raw Tokens: [3651, 4082, 4582, 4582, 1212, 4582, 4582, 1212, 4256, 4256, 4582, 4582, 1212, 4256, 4256, 2312, 2312, 2120, 2312, 2120]
+Logits Stats: {'min': -0.32901307940483093, 'max': 0.16112785041332245, 'mean': -0.0473957397043705, 'std': 0.06858498603105545}
+------------------------------------------------------------
+File: S005R01_features.h5
+Epoch: 0
+Dream Text: dim light dim black black black float end touch touch end end rise rise rise feel rise feel mystery mystery
+Confidence: 0.000223
+Raw Tokens: [1826, 3923, 1826, 2312, 2312, 2312, 2120, 4082, 795, 795, 4082, 4082, 4582, 4582, 4582, 1212, 4582, 1212, 4256, 4256]
+Logits Stats: {'min': -0.3232395052909851, 'max': 0.17553913593292236, 'mean': -0.047766659408807755, 'std': 0.06858997046947479}
+------------------------------------------------------------
+File: S005R01_features.h5
+Epoch: 1
+Dream Text: end end rise rise rise feel rise feel mystery mystery rise rise feel mystery mystery black black float black float
+Confidence: 0.000222
+Raw Tokens: [4082, 4082, 4582, 4582, 4582, 1212, 4582, 1212, 4256, 4256, 4582, 4582, 1212, 4256, 4256, 2312, 2312, 2120, 2312, 2120]
+Logits Stats: {'min': -0.32896360754966736, 'max': 0.16876664757728577, 'mean': -0.047747597098350525, 'std': 0.06889086216688156}
+------------------------------------------------------------
+File: S005R01_features.h5
+Epoch: 2
+Dream Text: dim light dim black black black float end touch touch end end rise rise rise feel rise feel mystery mystery
+Confidence: 0.000223
+Raw Tokens: [1826, 3923, 1826, 2312, 2312, 2312, 2120, 4082, 795, 795, 4082, 4082, 4582, 4582, 4582, 1212, 4582, 1212, 4256, 4256]
+Logits Stats: {'min': -0.32340139150619507, 'max': 0.1681058704853058, 'mean': -0.0478312186896801, 'std': 0.06864845007658005}
+------------------------------------------------------------
+File: S003R02_features.h5
+Epoch: 0
+Dream Text: dim light dim black black black float end touch touch end end rise rise rise feel rise feel mystery mystery
+Confidence: 0.000223
+Raw Tokens: [1826, 3923, 1826, 2312, 2312, 2312, 2120, 4082, 795, 795, 4082, 4082, 4582, 4582, 4582, 1212, 4582, 1212, 4256, 4256]
+Logits Stats: {'min': -0.3230517506599426, 'max': 0.16378101706504822, 'mean': -0.04772106185555458, 'std': 0.06856086850166321}
+------------------------------------------------------------
+File: S003R02_features.h5
+Epoch: 1
+Dream Text: dim light dim black black float black touch touch touch light light night mystery mystery mystery dim dim think think
+Confidence: 0.000222
+Raw Tokens: [1826, 3923, 1826, 2312, 2312, 2120, 2312, 795, 795, 795, 3923, 3923, 2647, 476, 476, 476, 1826, 1826, 4451, 4451]
+Logits Stats: {'min': -0.31706151366233826, 'max': 0.17175035178661346, 'mean': -0.046249158680438995, 'std': 0.06822856515645981}
+------------------------------------------------------------
+File: S003R02_features.h5
+Epoch: 2
+Dream Text: dim light dim black black black float float end end rise rise rise feel mystery mystery mystery power black black
+Confidence: 0.000223
+Raw Tokens: [1826, 3923, 1826, 2312, 2312, 2312, 2120, 2120, 4082, 4082, 4582, 4582, 4582, 1212, 4256, 4256, 4256, 2399, 2312, 2312]
+Logits Stats: {'min': -0.3354848027229309, 'max': 0.16945773363113403, 'mean': -0.04836566746234894, 'std': 0.06897138804197311}
+------------------------------------------------------------
