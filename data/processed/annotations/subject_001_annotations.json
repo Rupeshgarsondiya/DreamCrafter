@@ -1,0 +1,225 @@
+{
+  "subject_id": "S001",
+  "recording_session": "R04",
+  "sleep_stage_sequence": [
+    "REM",
+    "REM",
+    "N1",
+    "W",
+    "N3",
+    "N3",
+    "N3",
+    "W",
+    "N3",
+    "N3",
+    "W",
+    "W",
+    "W",
+    "N2",
+    "N3",
+    "N3",
+    "REM",
+    "N1",
+    "N3",
+    "REM",
+    "N3",
+    "N3",
+    "REM",
+    "REM",
+    "REM",
+    "W",
+    "N1",
+    "N1",
+    "N2",
+    "W",
+    "REM",
+    "N1",
+    "N2",
+    "REM",
+    "N3",
+    "W",
+    "N3",
+    "W",
+    "N1",
+    "N1",
+    "W",
+    "REM",
+    "N2",
+    "REM",
+    "N3",
+    "N1",
+    "REM",
+    "N2",
+    "N3",
+    "REM",
+    "REM",
+    "REM",
+    "N1",
+    "N1",
+    "N3",
+    "REM",
+    "W",
+    "N2",
+    "REM",
+    "N2"
+  ],
+  "dream_reports": [
+    {
+      "epoch": 0,
+      "content": "adventure dreams with chasing and escaping",
+      "vividness": 0.6497957422147477
+    },
+    {
+      "epoch": 1,
+      "content": "bizarre transformations and impossible scenarios",
+      "vividness": 0.8119668404985375
+    },
+    {
+      "epoch": 13,
+      "content": "familiar places and everyday situations",
+      "vividness": 0.379857179591901
+    },
+    {
+      "epoch": 16,
+      "content": "vivid colorful landscapes with flying sensations",
+      "vividness": 0.9159489538417074
+    },
+    {
+      "epoch": 19,
+      "content": "bizarre transformations and impossible scenarios",
+      "vividness": 0.8824194790563089
+    },
+    {
+      "epoch": 22,
+      "content": "adventure dreams with chasing and escaping",
+      "vividness": 0.9148597109421786
+    },
+    {
+      "epoch": 23,
+      "content": "emotional conversations and dramatic events",
+      "vividness": 0.6063141019033362
+    },
+    {
+      "epoch": 24,
+      "content": "emotional conversations and dramatic events",
+      "vividness": 0.8578436625281378
+    },
+    {
+      "epoch": 30,
+      "content": "adventure dreams with chasing and escaping",
+      "vividness": 0.7693444732932776
+    },
+    {
+      "epoch": 33,
+      "content": "vivid colorful landscapes with flying sensations",
+      "vividness": 0.850091488974414
+    },
+    {
+      "epoch": 41,
+      "content": "vivid colorful landscapes with flying sensations",
+      "vividness": 0.8643882486682105
+    },
+    {
+      "epoch": 42,
+      "content": "familiar places and everyday situations",
+      "vividness": 0.23525161641921813
+    },
+    {
+      "epoch": 43,
+      "content": "emotional conversations and dramatic events",
+      "vividness": 0.64433551088609
+    },
+    {
+      "epoch": 46,
+      "content": "vivid colorful landscapes with flying sensations",
+      "vividness": 0.6737144925303692
+    },
+    {
+      "epoch": 49,
+      "content": "complex social interactions with family and friends",
+      "vividness": 0.9271127550593729
+    },
+    {
+      "epoch": 50,
+      "content": "vivid colorful landscapes with flying sensations",
+      "vividness": 0.8406347972690495
+    },
+    {
+      "epoch": 51,
+      "content": "complex social interactions with family and friends",
+      "vividness": 0.6755512124118453
+    },
+    {
+      "epoch": 55,
+      "content": "adventure dreams with chasing and escaping",
+      "vividness": 0.9504511532206629
+    },
+    {
+      "epoch": 58,
+      "content": "complex social interactions with family and friends",
+      "vividness": 0.618451037584681
+    }
+  ],
+  "timestamps": [
+    0,
+    30,
+    60,
+    90,
+    120,
+    150,
+    180,
+    210,
+    240,
+    270,
+    300,
+    330,
+    360,
+    390,
+    420,
+    450,
+    480,
+    510,
+    540,
+    570,
+    600,
+    630,
+    660,
+    690,
+    720,
+    750,
+    780,
+    810,
+    840,
+    870,
+    900,
+    930,
+    960,
+    990,
+    1020,
+    1050,
+    1080,
+    1110,
+    1140,
+    1170,
+    1200,
+    1230,
+    1260,
+    1290,
+    1320,
+    1350,
+    1380,
+    1410,
+    1440,
+    1470,
+    1500,
+    1530,
+    1560,
+    1590,
+    1620,
+    1650,
+    1680,
+    1710,
+    1740,
+    1770
+  ]
+}

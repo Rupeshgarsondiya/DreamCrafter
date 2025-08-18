@@ -1,0 +1,210 @@
+{
+  "subject_id": "S008",
+  "recording_session": "R01",
+  "sleep_stage_sequence": [
+    "W",
+    "N1",
+    "N2",
+    "N2",
+    "N3",
+    "W",
+    "N2",
+    "N3",
+    "N2",
+    "N2",
+    "REM",
+    "REM",
+    "N3",
+    "REM",
+    "N1",
+    "N2",
+    "N1",
+    "N1",
+    "N2",
+    "W",
+    "W",
+    "N1",
+    "N3",
+    "N3",
+    "N1",
+    "W",
+    "N3",
+    "REM",
+    "REM",
+    "N3",
+    "W",
+    "N2",
+    "REM",
+    "W",
+    "W",
+    "W",
+    "W",
+    "N3",
+    "W",
+    "N1",
+    "N2",
+    "N2",
+    "N3",
+    "REM",
+    "N3",
+    "N3",
+    "N1",
+    "N3",
+    "N1",
+    "N2",
+    "N3",
+    "N1",
+    "N3",
+    "W",
+    "REM",
+    "REM",
+    "W",
+    "N2",
+    "REM",
+    "N3"
+  ],
+  "dream_reports": [
+    {
+      "epoch": 2,
+      "content": "familiar places and everyday situations",
+      "vividness": 0.2115993175569945
+    },
+    {
+      "epoch": 3,
+      "content": "familiar places and everyday situations",
+      "vividness": 0.41782223086845244
+    },
+    {
+      "epoch": 6,
+      "content": "simple activities like walking or talking",
+      "vividness": 0.4779724714737451
+    },
+    {
+      "epoch": 10,
+      "content": "bizarre transformations and impossible scenarios",
+      "vividness": 0.8248923522552267
+    },
+    {
+      "epoch": 11,
+      "content": "bizarre transformations and impossible scenarios",
+      "vividness": 0.9391153945121182
+    },
+    {
+      "epoch": 13,
+      "content": "emotional conversations and dramatic events",
+      "vividness": 0.8071294332866004
+    },
+    {
+      "epoch": 27,
+      "content": "bizarre transformations and impossible scenarios",
+      "vividness": 0.7173809014511809
+    },
+    {
+      "epoch": 28,
+      "content": "emotional conversations and dramatic events",
+      "vividness": 0.7246737102260203
+    },
+    {
+      "epoch": 32,
+      "content": "adventure dreams with chasing and escaping",
+      "vividness": 0.6458569024389144
+    },
+    {
+      "epoch": 40,
+      "content": "short conversations with known people",
+      "vividness": 0.508324108721381
+    },
+    {
+      "epoch": 41,
+      "content": "simple activities like walking or talking",
+      "vividness": 0.4196875814245884
+    },
+    {
+      "epoch": 43,
+      "content": "bizarre transformations and impossible scenarios",
+      "vividness": 0.9293678398984485
+    },
+    {
+      "epoch": 49,
+      "content": "fragmented images and brief visual scenes",
+      "vividness": 0.4326097518992016
+    },
+    {
+      "epoch": 54,
+      "content": "bizarre transformations and impossible scenarios",
+      "vividness": 0.6367792228567337
+    },
+    {
+      "epoch": 55,
+      "content": "complex social interactions with family and friends",
+      "vividness": 0.6876304673342195
+    },
+    {
+      "epoch": 58,
+      "content": "adventure dreams with chasing and escaping",
+      "vividness": 0.9194734087669187
+    }
+  ],
+  "timestamps": [
+    0,
+    30,
+    60,
+    90,
+    120,
+    150,
+    180,
+    210,
+    240,
+    270,
+    300,
+    330,
+    360,
+    390,
+    420,
+    450,
+    480,
+    510,
+    540,
+    570,
+    600,
+    630,
+    660,
+    690,
+    720,
+    750,
+    780,
+    810,
+    840,
+    870,
+    900,
+    930,
+    960,
+    990,
+    1020,
+    1050,
+    1080,
+    1110,
+    1140,
+    1170,
+    1200,
+    1230,
+    1260,
+    1290,
+    1320,
+    1350,
+    1380,
+    1410,
+    1440,
+    1470,
+    1500,
+    1530,
+    1560,
+    1590,
+    1620,
+    1650,
+    1680,
+    1710,
+    1740,
+    1770
+  ]
+}

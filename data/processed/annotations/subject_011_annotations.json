@@ -1,0 +1,225 @@
+{
+  "subject_id": "S011",
+  "recording_session": "R02",
+  "sleep_stage_sequence": [
+    "N2",
+    "REM",
+    "REM",
+    "W",
+    "W",
+    "REM",
+    "REM",
+    "N2",
+    "W",
+    "N3",
+    "N2",
+    "N1",
+    "N3",
+    "N1",
+    "N3",
+    "REM",
+    "N1",
+    "N2",
+    "W",
+    "N2",
+    "REM",
+    "N1",
+    "N1",
+    "N2",
+    "REM",
+    "N3",
+    "N2",
+    "N1",
+    "REM",
+    "REM",
+    "N1",
+    "N2",
+    "N1",
+    "REM",
+    "N1",
+    "W",
+    "N1",
+    "N3",
+    "REM",
+    "W",
+    "REM",
+    "N1",
+    "N2",
+    "N1",
+    "W",
+    "N2",
+    "N2",
+    "N1",
+    "N2",
+    "N3",
+    "N2",
+    "W",
+    "W",
+    "N1",
+    "N1",
+    "N1",
+    "REM",
+    "N3",
+    "N3",
+    "W"
+  ],
+  "dream_reports": [
+    {
+      "epoch": 0,
+      "content": "fragmented images and brief visual scenes",
+      "vividness": 0.421718650847489
+    },
+    {
+      "epoch": 1,
+      "content": "vivid colorful landscapes with flying sensations",
+      "vividness": 0.8413083135870131
+    },
+    {
+      "epoch": 2,
+      "content": "vivid colorful landscapes with flying sensations",
+      "vividness": 0.639714171702323
+    },
+    {
+      "epoch": 5,
+      "content": "emotional conversations and dramatic events",
+      "vividness": 0.8531180697080353
+    },
+    {
+      "epoch": 6,
+      "content": "complex social interactions with family and friends",
+      "vividness": 0.8320714966419657
+    },
+    {
+      "epoch": 10,
+      "content": "familiar places and everyday situations",
+      "vividness": 0.20848971654185325
+    },
+    {
+      "epoch": 15,
+      "content": "bizarre transformations and impossible scenarios",
+      "vividness": 0.7503349317555712
+    },
+    {
+      "epoch": 19,
+      "content": "simple activities like walking or talking",
+      "vividness": 0.40888383896703007
+    },
+    {
+      "epoch": 20,
+      "content": "vivid colorful landscapes with flying sensations",
+      "vividness": 0.9194370323368757
+    },
+    {
+      "epoch": 24,
+      "content": "adventure dreams with chasing and escaping",
+      "vividness": 0.8105929991781267
+    },
+    {
+      "epoch": 28,
+      "content": "emotional conversations and dramatic events",
+      "vividness": 0.880750098632866
+    },
+    {
+      "epoch": 29,
+      "content": "complex social interactions with family and friends",
+      "vividness": 0.7902224635615775
+    },
+    {
+      "epoch": 31,
+      "content": "fragmented images and brief visual scenes",
+      "vividness": 0.2307353259579452
+    },
+    {
+      "epoch": 33,
+      "content": "adventure dreams with chasing and escaping",
+      "vividness": 0.9308091862773119
+    },
+    {
+      "epoch": 38,
+      "content": "complex social interactions with family and friends",
+      "vividness": 0.6072849409890264
+    },
+    {
+      "epoch": 40,
+      "content": "bizarre transformations and impossible scenarios",
+      "vividness": 0.7327607835743124
+    },
+    {
+      "epoch": 46,
+      "content": "simple activities like walking or talking",
+      "vividness": 0.43587155632999797
+    },
+    {
+      "epoch": 48,
+      "content": "short conversations with known people",
+      "vividness": 0.4611336739974597
+    },
+    {
+      "epoch": 56,
+      "content": "emotional conversations and dramatic events",
+      "vividness": 0.8671874158937175
+    }
+  ],
+  "timestamps": [
+    0,
+    30,
+    60,
+    90,
+    120,
+    150,
+    180,
+    210,
+    240,
+    270,
+    300,
+    330,
+    360,
+    390,
+    420,
+    450,
+    480,
+    510,
+    540,
+    570,
+    600,
+    630,
+    660,
+    690,
+    720,
+    750,
+    780,
+    810,
+    840,
+    870,
+    900,
+    930,
+    960,
+    990,
+    1020,
+    1050,
+    1080,
+    1110,
+    1140,
+    1170,
+    1200,
+    1230,
+    1260,
+    1290,
+    1320,
+    1350,
+    1380,
+    1410,
+    1440,
+    1470,
+    1500,
+    1530,
+    1560,
+    1590,
+    1620,
+    1650,
+    1680,
+    1710,
+    1740,
+    1770
+  ]
+}

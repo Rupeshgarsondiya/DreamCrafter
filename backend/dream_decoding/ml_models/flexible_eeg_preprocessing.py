@@ -1,290 +1,296 @@
-import os
-import mne
+"""
+Memory-optimized EEG preprocessing for dream decoding
+Designed to prevent memory crashes and system instability
+"""
+
 import numpy as np
+import mne
+from scipy.signal import butter, filtfilt
+from sklearn.preprocessing import RobustScaler
 import h5py
-from scipy import signal
-import warnings
+from pathlib import Path
+import logging
+import gc
 from tqdm import tqdm
-warnings.filterwarnings('ignore')
 
-class FlexibleEEGPreprocessor:
-    """
-    EEG Preprocessing handling partial datasets with missing files.
-    Optimized for RTX 4050 with your 33 downloaded files.
-    """
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-    def __init__(self, sampling_rate=100, max_duration=300, epoch_length=30, overlap=0.5):
-        self.fs = sampling_rate
-        self.max_duration = max_duration  # Crop to 5 minutes for memory efficiency
-        self.epoch_length = epoch_length  # 30-second epochs
-        self.overlap = overlap  # 50% overlap between epochs
-
-    def analyze_dataset(self, data_dir='data/raw/comprehensive_1gb'):
-        """Analyze what files you actually have"""
-        files = [f for f in os.listdir(data_dir) if f.endswith('.edf')]
+class MemoryOptimizedEEGPreprocessor:
+    def __init__(self, 
+                 window_size_sec=10,  # Smaller windows for less memory
+                 stride_sec=5, 
+                 target_sr=64,  # Lower sampling rate
+                 max_channels=16):  # Limit channels
+        """
+        Memory-optimized EEG Preprocessor
         
-        categories = {
-            'Sleep Cassette': [f for f in files if f.startswith('SC4')],
-            'Sleep Telemetry': [f for f in files if f.startswith('ST7')],
-            'Motor Imagery': [f for f in files if f.startswith('S0') and ('R01' in f or 'R02' in f)],
-            'Motor Movement': [f for f in files if f.startswith('S0') and ('R03' in f or 'R04' in f)]
+        Args:
+            window_size_sec: Smaller window size (10s vs 30s)
+            stride_sec: Stride between windows
+            target_sr: Lower target sampling rate (64Hz vs 128Hz)
+            max_channels: Limit number of channels to process
+        """
+        self.window_size_sec = window_size_sec
+        self.stride_sec = stride_sec
+        self.target_sr = target_sr
+        self.max_channels = max_channels
+        self.scaler = RobustScaler()
+        
+        # Simplified frequency bands
+        self.freq_bands = {
+            'delta': (0.5, 4),
+            'theta': (4, 8), 
+            'alpha': (8, 13),
+            'beta': (13, 30)
         }
-        
-        print("📊 Dataset Analysis:")
-        print(f"   📁 Total EDF files found: {len(files)}")
-        for category, cat_files in categories.items():
-            print(f"   🧠 {category}: {len(cat_files)} files")
-        
-        return files, categories
 
-    def load_and_preprocess(self, file_path):
-        """Load and preprocess one EEG EDF file with robust error handling"""
-        print(f"   📂 Loading: {os.path.basename(file_path)}")
+    def process_file_streaming(self, file_path, output_dir):
+        """Process file with minimal memory footprint"""
+        output_dir = Path(output_dir)
+        output_dir.mkdir(parents=True, exist_ok=True)
         
         try:
-            # Load EDF file
-            raw = mne.io.read_raw_edf(file_path, preload=True, verbose=False)
+            logger.info(f"Processing {file_path} with memory optimization...")
             
-            original_duration = raw.times[-1]
-            original_channels = raw.info['nchan']
-            original_sfreq = raw.info['sfreq']
+            # Load with minimal memory
+            raw = mne.io.read_raw_edf(file_path, preload=False, verbose=False)
             
-            print(f"      📊 Original: {original_channels} ch, {original_sfreq}Hz, {original_duration:.1f}s")
+            # Select limited EEG channels
+            raw = self._select_eeg_channels(raw)
+            if raw is None:
+                return False
             
-            # Crop if too long (memory management for RTX 4050)
-            if original_duration > self.max_duration:
-                raw.crop(tmax=self.max_duration)
-                print(f"      ✂️ Cropped to {self.max_duration}s for memory efficiency")
+            # Get basic info before loading data
+            sfreq = raw.info['sfreq']
+            n_channels = len(raw.ch_names)
+            duration = raw.times[-1]
             
-            # Select EEG channels only (remove EOG, EMG, etc.)
-            eeg_channels = []
-            for ch in raw.ch_names:
-                ch_upper = ch.upper()
-                if any(marker in ch_upper for marker in ['EEG', 'F', 'C', 'P', 'O']):
-                    eeg_channels.append(ch)
+            logger.info(f"File: {duration:.1f}s, {n_channels} channels, {sfreq}Hz")
             
-            if eeg_channels:
-                # Limit to 19 channels max for RTX 4050 memory
-                max_channels = min(len(eeg_channels), 19)
-                raw.pick_channels(eeg_channels[:max_channels])
-                print(f"      🧠 Selected {len(raw.ch_names)} EEG channels")
-            else:
-                print(f"      ⚠️ No clear EEG channels found, using first 19 channels")
-                if raw.info['nchan'] > 19:
-                    raw.pick_channels(raw.ch_names[:19])
+            # Process in chunks to avoid memory overload
+            chunk_duration = 60  # Process 60 seconds at a time
+            all_features = []
             
-            # Apply filters
-            print(f"      🔄 Filtering...")
-            raw.filter(l_freq=0.5, h_freq=40, verbose=False)  # Bandpass
-            raw.notch_filter(50, verbose=False)  # Remove power line noise
+            for start_time in tqdm(np.arange(0, duration - chunk_duration, chunk_duration), 
+                                 desc="Processing chunks"):
+                end_time = min(start_time + chunk_duration, duration)
+                
+                # Load only this chunk
+                chunk_raw = raw.copy().crop(tmin=start_time, tmax=end_time)
+                chunk_raw.load_data()
+                
+                # Preprocess chunk
+                chunk_raw = self._preprocess_chunk(chunk_raw)
+                if chunk_raw is None:
+                    continue
+                
+                # Extract features from chunk
+                chunk_features = self._extract_chunk_features(chunk_raw)
+                if len(chunk_features) > 0:
+                    all_features.extend(chunk_features)
+                
+                # Clear memory
+                del chunk_raw
+                gc.collect()
             
-            # Resample if needed
-            if original_sfreq != self.fs:
-                raw.resample(self.fs)
-                print(f"      📉 Resampled from {original_sfreq}Hz to {self.fs}Hz")
+            if not all_features:
+                logger.error(f"No features extracted from {file_path}")
+                return False
+            
+            # Convert to array and scale
+            feature_array = np.array(all_features)
+            scaled_features = self.scaler.fit_transform(feature_array)
+            
+            # Save results
+            subject_id = Path(file_path).stem
+            output_file = output_dir / f"{subject_id}_features.h5"
+            
+            with h5py.File(output_file, 'w') as f:
+                f.create_dataset('features', data=scaled_features)
+                f.create_dataset('sampling_rate', data=self.target_sr)
+                f.create_dataset('n_chunks', data=len(scaled_features))
+                f.create_dataset('n_channels', data=n_channels)
+                f.attrs['subject_id'] = subject_id
+                f.attrs['preprocessing_version'] = '3.0_memory_optimized'
+            
+            logger.info(f"✅ Processed {subject_id}: {len(scaled_features)} windows")
+            return True
+            
+        except Exception as e:
+            logger.error(f"❌ Error processing {file_path}: {e}")
+            return False
+        finally:
+            # Ensure cleanup
+            gc.collect()
+
+    def _select_eeg_channels(self, raw):
+        """Select limited EEG channels to reduce memory"""
+        try:
+            # Try standard EEG channel selection
+            eeg_channels = mne.pick_types(raw.info, eeg=True, exclude='bads')
+            
+            if len(eeg_channels) == 0:
+                # Fallback pattern matching
+                ch_names = raw.ch_names
+                eeg_patterns = ['EEG', 'C3', 'C4', 'O1', 'O2', 'F3', 'F4', 'P3', 'P4']
+                eeg_channels = [i for i, ch in enumerate(ch_names) 
+                               if any(pattern in ch.upper() for pattern in eeg_patterns)]
+            
+            if len(eeg_channels) == 0:
+                logger.warning("No EEG channels found")
+                return None
+            
+            # Limit to max_channels
+            selected_channels = eeg_channels[:self.max_channels]
+            raw.pick(selected_channels)
             
             return raw
             
         except Exception as e:
-            print(f"      ❌ Failed to load {file_path}: {str(e)}")
+            logger.error(f"Error selecting channels: {e}")
             return None
 
-    def create_epochs(self, raw):
-        """Create overlapping epochs from continuous EEG"""
+    def _preprocess_chunk(self, raw):
+        """Apply preprocessing to a chunk"""
         try:
-            step_size = self.epoch_length * (1 - self.overlap)
-            events = mne.make_fixed_length_events(raw, duration=step_size)
+            # Get safe filter frequencies
+            sfreq = raw.info['sfreq']
+            nyquist = sfreq / 2.0
             
-            epochs = mne.Epochs(
-                raw, events, 
-                tmin=0, tmax=self.epoch_length - 1/self.fs,
-                baseline=None, preload=True, verbose=False
-            )
+            # Bandpass filter
+            l_freq = 0.5
+            h_freq = min(30.0, nyquist - 1.0)  # Conservative high freq
             
-            print(f"      ✅ Created {len(epochs)} epochs of {self.epoch_length}s each")
-            return epochs
+            raw.filter(l_freq=l_freq, h_freq=h_freq, verbose=False)
+            
+            # Notch filter if possible
+            notch_freqs = [f for f in [50, 60] if f < nyquist - 1]
+            if notch_freqs:
+                raw.notch_filter(freqs=notch_freqs, verbose=False)
+            
+            # Resample to target rate
+            if sfreq != self.target_sr:
+                raw.resample(sfreq=self.target_sr, verbose=False)
+            
+            # Set reference
+            raw.set_eeg_reference('average', projection=False, verbose=False)
+            
+            return raw
             
         except Exception as e:
-            print(f"      ❌ Failed to create epochs: {str(e)}")
+            logger.error(f"Preprocessing error: {e}")
             return None
 
-    def extract_comprehensive_features(self, epochs):
-        """Extract comprehensive features for dream decoding"""
-        data = epochs.get_data()  # Shape: (n_epochs, n_channels, n_timepoints)
-        print(f"      🔍 Extracting features from shape: {data.shape}")
-        
-        features = {}
-        
-        # 1. Raw signals (for deep learning models)
-        features['raw_signals'] = data.astype(np.float32)  # Use float32 for memory
-        
-        # 2. Spectral features (frequency bands important for sleep/dreams)
-        print(f"      🌊 Computing spectral features...")
-        bands = {
-            'delta': (0.5, 4),    # Deep sleep
-            'theta': (4, 8),      # REM sleep, drowsiness
-            'alpha': (8, 13),     # Relaxed wakefulness
-            'beta': (13, 30),     # Alert wakefulness
-            'gamma': (30, 40)     # High-frequency activity
-        }
-        
-        spectral_features = {}
-        for band_name, (low, high) in bands.items():
-            sos = signal.butter(4, [low, high], btype='band', fs=self.fs, output='sos')
-            filtered = signal.sosfilt(sos, data, axis=-1)
-            power = np.mean(filtered**2, axis=-1).astype(np.float32)
-            spectral_features[f'{band_name}_power'] = power
-        
-        features['spectral'] = spectral_features
-        
-        # 3. Statistical features
-        print(f"      📈 Computing statistical features...")
-        statistical_features = {
-            'mean': np.mean(data, axis=-1).astype(np.float32),
-            'std': np.std(data, axis=-1).astype(np.float32),
-            'max': np.max(data, axis=-1).astype(np.float32),
-            'min': np.min(data, axis=-1).astype(np.float32),
-            'rms': np.sqrt(np.mean(data**2, axis=-1)).astype(np.float32)
-        }
-        features['statistical'] = statistical_features
-        
-        print(f"      ✅ Extracted all features successfully")
-        return features
+    def _extract_chunk_features(self, raw):
+        """Extract features from preprocessed chunk"""
+        try:
+            data = raw.get_data()
+            sfreq = raw.info['sfreq']
+            
+            # Create small windows
+            window_samples = int(self.window_size_sec * sfreq)
+            stride_samples = int(self.stride_sec * sfreq)
+            
+            features = []
+            
+            for start in range(0, data.shape[1] - window_samples + 1, stride_samples):
+                end = start + window_samples
+                window_data = data[:, start:end]
+                
+                # Extract simple features
+                window_features = self._extract_window_features(window_data, sfreq)
+                if len(window_features) > 0:
+                    features.append(window_features)
+            
+            return features
+            
+        except Exception as e:
+            logger.error(f"Feature extraction error: {e}")
+            return []
 
-    def save_features(self, features, output_path):
-        """Save features to compressed HDF5 file"""
-        os.makedirs(os.path.dirname(output_path), exist_ok=True)
-        
-        print(f"      💾 Saving to: {os.path.basename(output_path)}")
-        
-        with h5py.File(output_path, 'w') as f:
-            for feature_type, feature_data in features.items():
-                if isinstance(feature_data, dict):
-                    # Create group for nested features
-                    group = f.create_group(feature_type)
-                    for sub_feature, sub_data in feature_data.items():
-                        group.create_dataset(
-                            sub_feature, data=sub_data, 
-                            compression='gzip', compression_opts=6
-                        )
-                else:
-                    # Direct feature array
-                    f.create_dataset(
-                        feature_type, data=feature_data,
-                        compression='gzip', compression_opts=6
-                    )
+    def _extract_window_features(self, data, sfreq):
+        """Extract features from a small window"""
+        try:
+            features = []
+            
+            # Basic statistical features per channel
+            for ch in range(int(data.shape[0])):
+                ch_data = data[ch]
+                features.extend([
+                    np.mean(ch_data),
+                    np.std(ch_data),
+                    np.var(ch_data),
+                    np.median(ch_data)
+                ])
+            
+            # Simple frequency features
+            for band_name, (low, high) in self.freq_bands.items():
+                try:
+                    nyquist = sfreq / 2
+                    if high < nyquist:
+                        low_norm = low / nyquist
+                        high_norm = high / nyquist
+                        
+                        b, a = butter(4, [low_norm, high_norm], btype='band')
+                        band_powers = []
+                        
+                        for ch in range(data.shape):
+                            filtered = filtfilt(b, a, data[ch])
+                            power = np.mean(filtered ** 2)
+                            band_powers.append(power)
+                        
+                        features.extend(band_powers)
+                except:
+                    continue
+            
+            return np.array(features)
+            
+        except Exception as e:
+            logger.warning(f"Window feature extraction error: {e}")
+            return np.array([])
 
-    def process_all_files(self, data_dir='data/raw/comprehensive_1gb', 
-                         output_dir='data/processed/comprehensive_features'):
-        """Process all available EEG files"""
-        
-        print("🚀 Starting EEG preprocessing for your partial dataset...")
-        
-        # Analyze dataset first
-        files, categories = self.analyze_dataset(data_dir)
-        
-        if not files:
-            print(f"❌ No EDF files found in {data_dir}")
-            return
-        
-        print(f"\n🔄 Processing {len(files)} EEG files...")
-        os.makedirs(output_dir, exist_ok=True)
-        
-        processed_count = 0
-        total_epochs = 0
-        failed_files = []
-        
-        for i, filename in enumerate(files, 1):
-            file_path = os.path.join(data_dir, filename)
-            
-            print(f"\n📄 [{i}/{len(files)}] Processing: {filename}")
-            
-            # Load and preprocess
-            raw = self.load_and_preprocess(file_path)
-            if raw is None:
-                failed_files.append(filename)
-                continue
-            
-            # Create epochs
-            epochs = self.create_epochs(raw)
-            if epochs is None:
-                failed_files.append(filename)
-                continue
-            
-            # Extract features
-            features = self.extract_comprehensive_features(epochs)
-            
-            # Save features
-            base_name = os.path.splitext(filename)[0]
-            output_path = os.path.join(output_dir, f'{base_name}_features.h5')
-            self.save_features(features, output_path)
-            
-            processed_count += 1
-            total_epochs += len(epochs)
-            
-            # Clear memory
-            del raw, epochs, features
-        
-        # Summary
-        print(f"\n🎉 Processing Complete!")
-        print(f"   📊 Successfully processed: {processed_count}/{len(files)} files")
-        print(f"   🧠 Total epochs generated: {total_epochs}")
-        print(f"   💾 Features saved to: {output_dir}")
-        print(f"   📈 Average epochs per file: {total_epochs/processed_count:.1f}")
-        
-        if failed_files:
-            print(f"   ⚠️ Failed files ({len(failed_files)}):")
-            for failed in failed_files:
-                print(f"      - {failed}")
-        
-        print(f"\n🎯 Dataset ready for RTX 4050 training!")
-        return processed_count, total_epochs
-
-def verify_processed_features(feature_dir='data/processed/comprehensive_features'):
-    """Verify the processed features"""
-    if not os.path.exists(feature_dir):
-        print("❌ Feature directory not found!")
+def main():
+    """Main processing function with memory management"""
+    raw_data_dir = Path("data/raw/comprehensive_1gb")
+    output_dir = Path("data/processed/comprehensive_features")
+    
+    # Get EDF files
+    edf_files = list(raw_data_dir.glob("*.edf"))
+    edf_files = [f for f in edf_files if "Hypnogram" not in str(f)]
+    
+    if not edf_files:
+        logger.error(f"No EDF files found in {raw_data_dir}")
         return
     
-    feature_files = [f for f in os.listdir(feature_dir) if f.endswith('.h5')]
+    logger.info(f"Found {len(edf_files)} EDF files to process")
     
-    print(f"\n🔍 Feature Verification:")
-    print(f"   📄 Feature files created: {len(feature_files)}")
+    # Process files sequentially (no multiprocessing to save memory)
+    preprocessor = MemoryOptimizedEEGPreprocessor()
     
-    if feature_files:
-        # Check first file
-        sample_file = os.path.join(feature_dir, feature_files[0])
-        
-        with h5py.File(sample_file, 'r') as f:
-            print(f"   📊 Sample file structure:")
-            for key in f.keys():
-                if isinstance(f[key], h5py.Group):
-                    print(f"      📁 {key}:")
-                    for subkey in f[key].keys():
-                        shape = f[key][subkey].shape
-                        print(f"         - {subkey}: {shape}")
-                else:
-                    shape = f[key].shape
-                    print(f"      📄 {key}: {shape}")
-        
-        total_epochs = 0
-        for feature_file in feature_files[:5]:  # Check first 5
-            with h5py.File(os.path.join(feature_dir, feature_file), 'r') as f:
-                if 'raw_signals' in f:
-                    epochs = f['raw_signals'].shape[0]
-                    total_epochs += epochs
-        
-        estimated_total = total_epochs * len(feature_files) // min(5, len(feature_files))
-        print(f"   🎯 Estimated total epochs: ~{estimated_total}")
+    successful = 0
+    failed = 0
     
-    print(f"   ✅ Ready for model training!")
+    for edf_file in tqdm(edf_files, desc="Processing files"):
+        try:
+            success = preprocessor.process_file_streaming(edf_file, output_dir)
+            if success:
+                successful += 1
+            else:
+                failed += 1
+                
+        except Exception as e:
+            logger.error(f"Failed to process {edf_file}: {e}")
+            failed += 1
+        
+        # Force garbage collection between files
+        gc.collect()
+    
+    print(f"\n{'='*50}")
+    print(f"Processing Complete!")
+    print(f"✅ Successful: {successful}")
+    print(f"❌ Failed: {failed}")
+    print(f"{'='*50}")
 
-if __name__ == '__main__':
-    # Run preprocessing
-    preprocessor = FlexibleEEGPreprocessor()
-    processed, epochs = preprocessor.process_all_files()
-    
-    # Verify results
-    verify_processed_features()
-    
-    print(f"\n🚀 Next step: Start building your EEG-to-text models!")
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,230 @@
+{
+  "subject_id": "S005",
+  "recording_session": "R02",
+  "sleep_stage_sequence": [
+    "N3",
+    "REM",
+    "REM",
+    "W",
+    "N1",
+    "REM",
+    "N2",
+    "N1",
+    "N3",
+    "N1",
+    "N1",
+    "N2",
+    "N3",
+    "N1",
+    "N3",
+    "W",
+    "N3",
+    "N1",
+    "W",
+    "N2",
+    "REM",
+    "N2",
+    "N2",
+    "N1",
+    "W",
+    "W",
+    "W",
+    "REM",
+    "N1",
+    "N2",
+    "W",
+    "N3",
+    "REM",
+    "W",
+    "W",
+    "W",
+    "N1",
+    "REM",
+    "REM",
+    "REM",
+    "N2",
+    "N3",
+    "REM",
+    "REM",
+    "N1",
+    "N2",
+    "N3",
+    "N3",
+    "W",
+    "N2",
+    "W",
+    "N3",
+    "N3",
+    "N2",
+    "N2",
+    "REM",
+    "REM",
+    "N3",
+    "REM",
+    "N1"
+  ],
+  "dream_reports": [
+    {
+      "epoch": 1,
+      "content": "adventure dreams with chasing and escaping",
+      "vividness": 0.710567062773841
+    },
+    {
+      "epoch": 2,
+      "content": "emotional conversations and dramatic events",
+      "vividness": 0.9729782390100362
+    },
+    {
+      "epoch": 5,
+      "content": "bizarre transformations and impossible scenarios",
+      "vividness": 0.8386698741563139
+    },
+    {
+      "epoch": 11,
+      "content": "familiar places and everyday situations",
+      "vividness": 0.5352583194513247
+    },
+    {
+      "epoch": 19,
+      "content": "familiar places and everyday situations",
+      "vividness": 0.3205016858783435
+    },
+    {
+      "epoch": 20,
+      "content": "adventure dreams with chasing and escaping",
+      "vividness": 0.7586532408810285
+    },
+    {
+      "epoch": 21,
+      "content": "short conversations with known people",
+      "vividness": 0.36196775130217496
+    },
+    {
+      "epoch": 27,
+      "content": "complex social interactions with family and friends",
+      "vividness": 0.8079386872839799
+    },
+    {
+      "epoch": 32,
+      "content": "bizarre transformations and impossible scenarios",
+      "vividness": 0.7285543025898716
+    },
+    {
+      "epoch": 37,
+      "content": "vivid colorful landscapes with flying sensations",
+      "vividness": 0.8232816518818219
+    },
+    {
+      "epoch": 38,
+      "content": "bizarre transformations and impossible scenarios",
+      "vividness": 0.6170795775172736
+    },
+    {
+      "epoch": 39,
+      "content": "adventure dreams with chasing and escaping",
+      "vividness": 0.9196798756964066
+    },
+    {
+      "epoch": 40,
+      "content": "fragmented images and brief visual scenes",
+      "vividness": 0.40009041686578517
+    },
+    {
+      "epoch": 42,
+      "content": "bizarre transformations and impossible scenarios",
+      "vividness": 0.9018536444021783
+    },
+    {
+      "epoch": 43,
+      "content": "emotional conversations and dramatic events",
+      "vividness": 0.6725371748986549
+    },
+    {
+      "epoch": 45,
+      "content": "familiar places and everyday situations",
+      "vividness": 0.2882664349709637
+    },
+    {
+      "epoch": 54,
+      "content": "simple activities like walking or talking",
+      "vividness": 0.3806724658619527
+    },
+    {
+      "epoch": 55,
+      "content": "emotional conversations and dramatic events",
+      "vividness": 0.9448900310266867
+    },
+    {
+      "epoch": 56,
+      "content": "emotional conversations and dramatic events",
+      "vividness": 0.8782749711362973
+    },
+    {
+      "epoch": 58,
+      "content": "complex social interactions with family and friends",
+      "vividness": 0.7676049589608682
+    }
+  ],
+  "timestamps": [
+    0,
+    30,
+    60,
+    90,
+    120,
+    150,
+    180,
+    210,
+    240,
+    270,
+    300,
+    330,
+    360,
+    390,
+    420,
+    450,
+    480,
+    510,
+    540,
+    570,
+    600,
+    630,
+    660,
+    690,
+    720,
+    750,
+    780,
+    810,
+    840,
+    870,
+    900,
+    930,
+    960,
+    990,
+    1020,
+    1050,
+    1080,
+    1110,
+    1140,
+    1170,
+    1200,
+    1230,
+    1260,
+    1290,
+    1320,
+    1350,
+    1380,
+    1410,
+    1440,
+    1470,
+    1500,
+    1530,
+    1560,
+    1590,
+    1620,
+    1650,
+    1680,
+    1710,
+    1740,
+    1770
+  ]
+}

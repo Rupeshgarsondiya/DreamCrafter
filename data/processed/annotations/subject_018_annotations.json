@@ -1,0 +1,215 @@
+{
+  "subject_id": "S018",
+  "recording_session": "R04",
+  "sleep_stage_sequence": [
+    "N3",
+    "N1",
+    "REM",
+    "W",
+    "N3",
+    "REM",
+    "N3",
+    "N3",
+    "N2",
+    "W",
+    "N1",
+    "N2",
+    "REM",
+    "W",
+    "N2",
+    "N3",
+    "N1",
+    "W",
+    "REM",
+    "N2",
+    "N3",
+    "W",
+    "N1",
+    "N3",
+    "N1",
+    "N2",
+    "REM",
+    "N3",
+    "N1",
+    "W",
+    "REM",
+    "N1",
+    "N1",
+    "W",
+    "REM",
+    "REM",
+    "N3",
+    "N1",
+    "N3",
+    "N2",
+    "REM",
+    "REM",
+    "N3",
+    "N3",
+    "REM",
+    "N2",
+    "REM",
+    "W",
+    "N1",
+    "N3",
+    "N3",
+    "W",
+    "REM",
+    "N2",
+    "N3",
+    "N2",
+    "N2",
+    "W",
+    "N1",
+    "REM"
+  ],
+  "dream_reports": [
+    {
+      "epoch": 2,
+      "content": "vivid colorful landscapes with flying sensations",
+      "vividness": 0.6036174176304661
+    },
+    {
+      "epoch": 5,
+      "content": "emotional conversations and dramatic events",
+      "vividness": 0.6560668146127434
+    },
+    {
+      "epoch": 12,
+      "content": "vivid colorful landscapes with flying sensations",
+      "vividness": 0.800164534661149
+    },
+    {
+      "epoch": 14,
+      "content": "familiar places and everyday situations",
+      "vividness": 0.3771143043786853
+    },
+    {
+      "epoch": 18,
+      "content": "vivid colorful landscapes with flying sensations",
+      "vividness": 0.6493397771126279
+    },
+    {
+      "epoch": 19,
+      "content": "familiar places and everyday situations",
+      "vividness": 0.33234567383240865
+    },
+    {
+      "epoch": 26,
+      "content": "vivid colorful landscapes with flying sensations",
+      "vividness": 0.8860764647288467
+    },
+    {
+      "epoch": 30,
+      "content": "bizarre transformations and impossible scenarios",
+      "vividness": 0.8694850919996633
+    },
+    {
+      "epoch": 34,
+      "content": "adventure dreams with chasing and escaping",
+      "vividness": 0.6000540357499677
+    },
+    {
+      "epoch": 35,
+      "content": "bizarre transformations and impossible scenarios",
+      "vividness": 0.7824582261015117
+    },
+    {
+      "epoch": 39,
+      "content": "fragmented images and brief visual scenes",
+      "vividness": 0.5568138410129885
+    },
+    {
+      "epoch": 40,
+      "content": "adventure dreams with chasing and escaping",
+      "vividness": 0.9035895375757061
+    },
+    {
+      "epoch": 41,
+      "content": "vivid colorful landscapes with flying sensations",
+      "vividness": 0.8575304440134262
+    },
+    {
+      "epoch": 44,
+      "content": "bizarre transformations and impossible scenarios",
+      "vividness": 0.8520145257188281
+    },
+    {
+      "epoch": 46,
+      "content": "complex social interactions with family and friends",
+      "vividness": 0.8002613818034214
+    },
+    {
+      "epoch": 52,
+      "content": "vivid colorful landscapes with flying sensations",
+      "vividness": 0.7184876951616648
+    },
+    {
+      "epoch": 59,
+      "content": "vivid colorful landscapes with flying sensations",
+      "vividness": 0.7599353941619003
+    }
+  ],
+  "timestamps": [
+    0,
+    30,
+    60,
+    90,
+    120,
+    150,
+    180,
+    210,
+    240,
+    270,
+    300,
+    330,
+    360,
+    390,
+    420,
+    450,
+    480,
+    510,
+    540,
+    570,
+    600,
+    630,
+    660,
+    690,
+    720,
+    750,
+    780,
+    810,
+    840,
+    870,
+    900,
+    930,
+    960,
+    990,
+    1020,
+    1050,
+    1080,
+    1110,
+    1140,
+    1170,
+    1200,
+    1230,
+    1260,
+    1290,
+    1320,
+    1350,
+    1380,
+    1410,
+    1440,
+    1470,
+    1500,
+    1530,
+    1560,
+    1590,
+    1620,
+    1650,
+    1680,
+    1710,
+    1740,
+    1770
+  ]
+}

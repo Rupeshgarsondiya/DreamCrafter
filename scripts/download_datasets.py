@@ -1,169 +1,197 @@
+#!/usr/bin/env python3
+"""
+Download real neuroscience datasets for EEG dream decoding
+Author: DreamCrafter Team
+"""
+
 import os
-import wget
+import urllib.request
+import zipfile
+import gzip
+import shutil
+from pathlib import Path
+import requests
 from tqdm import tqdm
 
-def download_comprehensive_1gb_dataset():
-    """Download comprehensive EEG dataset (~1GB) with all categories"""
-    
-    samples = [
-        # Sleep-EDF Database (Overnight Sleep Recordings) - ~300MB total
-        {"name": "SC4001E0-PSG.edf", "url": "https://physionet.org/files/sleep-edfx/1.0.0/sleep-cassette/SC4001E0-PSG.edf", "size": "15MB", "category": "Sleep"},
-        {"name": "SC4002E0-PSG.edf", "url": "https://physionet.org/files/sleep-edfx/1.0.0/sleep-cassette/SC4002E0-PSG.edf", "size": "15MB", "category": "Sleep"},
-        {"name": "SC4003E0-PSG.edf", "url": "https://physionet.org/files/sleep-edfx/1.0.0/sleep-cassette/SC4003E0-PSG.edf", "size": "15MB", "category": "Sleep"},
-        {"name": "SC4004E0-PSG.edf", "url": "https://physionet.org/files/sleep-edfx/1.0.0/sleep-cassette/SC4004E0-PSG.edf", "size": "16MB", "category": "Sleep"},
-        {"name": "SC4005E0-PSG.edf", "url": "https://physionet.org/files/sleep-edfx/1.0.0/sleep-cassette/SC4005E0-PSG.edf", "size": "15MB", "category": "Sleep"},
-        {"name": "SC4006E0-PSG.edf", "url": "https://physionet.org/files/sleep-edfx/1.0.0/sleep-cassette/SC4006E0-PSG.edf", "size": "16MB", "category": "Sleep"},
-        {"name": "SC4007E0-PSG.edf", "url": "https://physionet.org/files/sleep-edfx/1.0.0/sleep-cassette/SC4007E0-PSG.edf", "size": "16MB", "category": "Sleep"},
-        {"name": "SC4008E0-PSG.edf", "url": "https://physionet.org/files/sleep-edfx/1.0.0/sleep-cassette/SC4008E0-PSG.edf", "size": "15MB", "category": "Sleep"},
-        {"name": "SC4009E0-PSG.edf", "url": "https://physionet.org/files/sleep-edfx/1.0.0/sleep-cassette/SC4009E0-PSG.edf", "size": "15MB", "category": "Sleep"},
-        {"name": "SC4010E0-PSG.edf", "url": "https://physionet.org/files/sleep-edfx/1.0.0/sleep-cassette/SC4010E0-PSG.edf", "size": "16MB", "category": "Sleep"},
-        {"name": "SC4011E0-PSG.edf", "url": "https://physionet.org/files/sleep-edfx/1.0.0/sleep-cassette/SC4011E0-PSG.edf", "size": "15MB", "category": "Sleep"},
-        {"name": "SC4012E0-PSG.edf", "url": "https://physionet.org/files/sleep-edfx/1.0.0/sleep-cassette/SC4012E0-PSG.edf", "size": "16MB", "category": "Sleep"},
-        {"name": "SC4013E0-PSG.edf", "url": "https://physionet.org/files/sleep-edfx/1.0.0/sleep-cassette/SC4013E0-PSG.edf", "size": "15MB", "category": "Sleep"},
-        {"name": "SC4014E0-PSG.edf", "url": "https://physionet.org/files/sleep-edfx/1.0.0/sleep-cassette/SC4014E0-PSG.edf", "size": "16MB", "category": "Sleep"},
-        {"name": "SC4015E0-PSG.edf", "url": "https://physionet.org/files/sleep-edfx/1.0.0/sleep-cassette/SC4015E0-PSG.edf", "size": "15MB", "category": "Sleep"},
-        {"name": "SC4016E0-PSG.edf", "url": "https://physionet.org/files/sleep-edfx/1.0.0/sleep-cassette/SC4016E0-PSG.edf", "size": "16MB", "category": "Sleep"},
-        {"name": "SC4017E0-PSG.edf", "url": "https://physionet.org/files/sleep-edfx/1.0.0/sleep-cassette/SC4017E0-PSG.edf", "size": "15MB", "category": "Sleep"},
-        {"name": "SC4018E0-PSG.edf", "url": "https://physionet.org/files/sleep-edfx/1.0.0/sleep-cassette/SC4018E0-PSG.edf", "size": "16MB", "category": "Sleep"},
-        {"name": "SC4019E0-PSG.edf", "url": "https://physionet.org/files/sleep-edfx/1.0.0/sleep-cassette/SC4019E0-PSG.edf", "size": "15MB", "category": "Sleep"},
-        {"name": "SC4020E0-PSG.edf", "url": "https://physionet.org/files/sleep-edfx/1.0.0/sleep-cassette/SC4020E0-PSG.edf", "size": "16MB", "category": "Sleep"},
-
-        # EEG Motor Movement/Imagery Dataset (Multiple Subjects) - ~500MB total
-        {"name": "S001R01.edf", "url": "https://physionet.org/files/eegmmidb/1.0.0/S001/S001R01.edf", "size": "25MB", "category": "Motor Imagery"},
-        {"name": "S001R02.edf", "url": "https://physionet.org/files/eegmmidb/1.0.0/S001/S001R02.edf", "size": "25MB", "category": "Motor Imagery"},
-        {"name": "S001R03.edf", "url": "https://physionet.org/files/eegmmidb/1.0.0/S001/S001R03.edf", "size": "25MB", "category": "Motor Movement"},
-        {"name": "S001R04.edf", "url": "https://physionet.org/files/eegmmidb/1.0.0/S001/S001R04.edf", "size": "25MB", "category": "Motor Movement"},
-        {"name": "S002R01.edf", "url": "https://physionet.org/files/eegmmidb/1.0.0/S002/S002R01.edf", "size": "25MB", "category": "Motor Imagery"},
-        {"name": "S002R02.edf", "url": "https://physionet.org/files/eegmmidb/1.0.0/S002/S002R02.edf", "size": "25MB", "category": "Motor Imagery"},
-        {"name": "S002R03.edf", "url": "https://physionet.org/files/eegmmidb/1.0.0/S002/S002R03.edf", "size": "25MB", "category": "Motor Movement"},
-        {"name": "S002R04.edf", "url": "https://physionet.org/files/eegmmidb/1.0.0/S002/S002R04.edf", "size": "25MB", "category": "Motor Movement"},
-        {"name": "S003R01.edf", "url": "https://physionet.org/files/eegmmidb/1.0.0/S003/S003R01.edf", "size": "25MB", "category": "Motor Imagery"},
-        {"name": "S003R02.edf", "url": "https://physionet.org/files/eegmmidb/1.0.0/S003/S003R02.edf", "size": "25MB", "category": "Motor Imagery"},
-        {"name": "S003R03.edf", "url": "https://physionet.org/files/eegmmidb/1.0.0/S003/S003R03.edf", "size": "25MB", "category": "Motor Movement"},
-        {"name": "S003R04.edf", "url": "https://physionet.org/files/eegmmidb/1.0.0/S003/S003R04.edf", "size": "25MB", "category": "Motor Movement"},
-        {"name": "S004R01.edf", "url": "https://physionet.org/files/eegmmidb/1.0.0/S004/S004R01.edf", "size": "25MB", "category": "Motor Imagery"},
-        {"name": "S004R02.edf", "url": "https://physionet.org/files/eegmmidb/1.0.0/S004/S004R02.edf", "size": "25MB", "category": "Motor Imagery"},
-        {"name": "S004R03.edf", "url": "https://physionet.org/files/eegmmidb/1.0.0/S004/S004R03.edf", "size": "25MB", "category": "Motor Movement"},
-        {"name": "S004R04.edf", "url": "https://physionet.org/files/eegmmidb/1.0.0/S004/S004R04.edf", "size": "25MB", "category": "Motor Movement"},
-        {"name": "S005R01.edf", "url": "https://physionet.org/files/eegmmidb/1.0.0/S005/S005R01.edf", "size": "25MB", "category": "Motor Imagery"},
-        {"name": "S005R02.edf", "url": "https://physionet.org/files/eegmmidb/1.0.0/S005/S005R02.edf", "size": "25MB", "category": "Motor Imagery"},
-        {"name": "S005R03.edf", "url": "https://physionet.org/files/eegmmidb/1.0.0/S005/S005R03.edf", "size": "25MB", "category": "Motor Movement"},
-        {"name": "S005R04.edf", "url": "https://physionet.org/files/eegmmidb/1.0.0/S005/S005R04.edf", "size": "25MB", "category": "Motor Movement"},
-
-        # Additional Sleep Database Files - ~200MB more
-        {"name": "ST7011J0-PSG.edf", "url": "https://physionet.org/files/sleep-edfx/1.0.0/sleep-telemetry/ST7011J0-PSG.edf", "size": "10MB", "category": "Sleep Telemetry"},
-        {"name": "ST7012J0-PSG.edf", "url": "https://physionet.org/files/sleep-edfx/1.0.0/sleep-telemetry/ST7012J0-PSG.edf", "size": "10MB", "category": "Sleep Telemetry"},
-        {"name": "ST7021J0-PSG.edf", "url": "https://physionet.org/files/sleep-edfx/1.0.0/sleep-telemetry/ST7021J0-PSG.edf", "size": "10MB", "category": "Sleep Telemetry"},
-        {"name": "ST7022J0-PSG.edf", "url": "https://physionet.org/files/sleep-edfx/1.0.0/sleep-telemetry/ST7022J0-PSG.edf", "size": "10MB", "category": "Sleep Telemetry"},
-        {"name": "ST7031J0-PSG.edf", "url": "https://physionet.org/files/sleep-edfx/1.0.0/sleep-telemetry/ST7031J0-PSG.edf", "size": "10MB", "category": "Sleep Telemetry"},
-        {"name": "ST7041J0-PSG.edf", "url": "https://physionet.org/files/sleep-edfx/1.0.0/sleep-telemetry/ST7041J0-PSG.edf", "size": "10MB", "category": "Sleep Telemetry"},
-        {"name": "ST7051J0-PSG.edf", "url": "https://physionet.org/files/sleep-edfx/1.0.0/sleep-telemetry/ST7051J0-PSG.edf", "size": "10MB", "category": "Sleep Telemetry"},
-        {"name": "ST7061J0-PSG.edf", "url": "https://physionet.org/files/sleep-edfx/1.0.0/sleep-telemetry/ST7061J0-PSG.edf", "size": "10MB", "category": "Sleep Telemetry"},
-        {"name": "ST7071J0-PSG.edf", "url": "https://physionet.org/files/sleep-edfx/1.0.0/sleep-telemetry/ST7071J0-PSG.edf", "size": "10MB", "category": "Sleep Telemetry"},
-        {"name": "ST7081J0-PSG.edf", "url": "https://physionet.org/files/sleep-edfx/1.0.0/sleep-telemetry/ST7081J0-PSG.edf", "size": "10MB", "category": "Sleep Telemetry"}
-    ]
-    
-    os.makedirs('data/raw/comprehensive_1gb', exist_ok=True)
-    
-    print("📥 Downloading comprehensive 1GB EEG dataset...")
-    print("🧠 Categories: Sleep EEG + Motor Imagery + Motor Movement + Sleep Telemetry")
-    print("📊 Total files: 50 | Estimated size: ~1GB")
-    print("🎯 Optimized for RTX 4050 dream decoding research\n")
-    
-    downloaded_count = 0
-    total_size_mb = 0
-    failed_downloads = []
-    
-    # Group by category for organized downloading
-    categories = {}
-    for sample in samples:
-        cat = sample['category']
-        if cat not in categories:
-            categories[cat] = []
-        categories[cat].append(sample)
-    
-    for category, cat_samples in categories.items():
-        print(f"\n🔄 Downloading {category} samples ({len(cat_samples)} files)...")
+class DatasetDownloader:
+    def __init__(self, base_dir="data/raw"):
+        self.base_dir = Path(base_dir)
+        self.base_dir.mkdir(parents=True, exist_ok=True)
         
-        for i, sample in enumerate(cat_samples, 1):
-            filepath = os.path.join('data/raw/comprehensive_1gb', sample['name'])
+    def download_with_progress(self, url, filename):
+        """Download file with progress bar"""
+        response = requests.get(url, stream=True)
+        total_size = int(response.headers.get('content-length', 0))
+        
+        with open(filename, 'wb') as file, tqdm(
+            desc=filename.name,
+            total=total_size,
+            unit='B',
+            unit_scale=True,
+            unit_divisor=1024,
+        ) as pbar:
+            for chunk in response.iter_content(chunk_size=8192):
+                if chunk:
+                    file.write(chunk)
+                    pbar.update(len(chunk))
+    
+    def download_sleep_edf(self):
+        """Download Sleep-EDF Database (~200MB)"""
+        print("Downloading Sleep-EDF Database...")
+        
+        # Sleep-EDF Expanded Database URLs (PhysioNet)
+        base_url = "https://physionet.org/files/sleep-edfx/1.0.0/"
+        
+        # Selected files for training (limit to ~200MB)
+        files_to_download = [
+            "sleep-cassette/SC4001E0-PSG.edf",
+            "sleep-cassette/SC4002E0-PSG.edf", 
+            "sleep-cassette/SC4011E0-PSG.edf",
+            "sleep-cassette/SC4012E0-PSG.edf",
+            "sleep-cassette/SC4001EH-Hypnogram.edf",
+            "sleep-cassette/SC4002EH-Hypnogram.edf",
+            "sleep-cassette/SC4011EH-Hypnogram.edf", 
+            "sleep-cassette/SC4012EH-Hypnogram.edf",
+            "sleep-telemetry/ST7011J0-PSG.edf",
+            "sleep-telemetry/ST7012J0-PSG.edf",
+            "sleep-telemetry/ST7021J0-PSG.edf",
+            "sleep-telemetry/ST7022J0-PSG.edf",
+            "sleep-telemetry/ST7011JM-Hypnogram.edf",
+            "sleep-telemetry/ST7012JM-Hypnogram.edf",
+            "sleep-telemetry/ST7021JM-Hypnogram.edf",
+            "sleep-telemetry/ST7022JM-Hypnogram.edf",
+        ]
+        
+        sleep_dir = self.base_dir / "sleep_edf"
+        sleep_dir.mkdir(exist_ok=True)
+        
+        for file_path in files_to_download:
+            url = base_url + file_path
+            local_path = sleep_dir / Path(file_path).name
             
-            print(f"   ⬇️ [{i}/{len(cat_samples)}] {sample['name']} ({sample['size']})")
+            if not local_path.exists():
+                try:
+                    self.download_with_progress(url, local_path)
+                    print(f"Downloaded: {local_path.name}")
+                except Exception as e:
+                    print(f"Failed to download {file_path}: {e}")
+    
+    def download_dreams_db(self):
+        """Download DREAMS Database (~150MB)"""
+        print("Downloading DREAMS Database...")
+        
+        # DREAMS Sleep Spindles Database
+        base_url = "https://zenodo.org/record/2650142/files/"
+        
+        files = [
+            "excerpt1.edf", "excerpt2.edf", "excerpt3.edf",
+            "visual_scoring1_excerpt1.txt", "visual_scoring1_excerpt2.txt", 
+            "visual_scoring1_excerpt3.txt"
+        ]
+        
+        dreams_dir = self.base_dir / "dreams_db"
+        dreams_dir.mkdir(exist_ok=True)
+        
+        for filename in files:
+            url = base_url + filename
+            local_path = dreams_dir / filename
             
-            if os.path.exists(filepath):
-                file_size = os.path.getsize(filepath) / (1024*1024)
-                print(f"      ✅ Already exists: {file_size:.1f}MB")
-                downloaded_count += 1
-                total_size_mb += file_size
-                continue
+            if not local_path.exists():
+                try:
+                    self.download_with_progress(url, local_path)
+                    print(f"Downloaded: {filename}")
+                except Exception as e:
+                    print(f"Failed to download {filename}: {e}")
+    
+    def create_dream_annotations(self):
+        """Create synthetic dream annotations based on sleep stages"""
+        print("Creating dream content annotations...")
+        
+        # Dream content templates based on sleep stages
+        dream_templates = {
+            'REM': [
+                "vivid colorful landscapes with flying sensations",
+                "complex social interactions with family and friends", 
+                "bizarre transformations and impossible scenarios",
+                "emotional conversations and dramatic events",
+                "adventure dreams with chasing and escaping"
+            ],
+            'N2': [
+                "fragmented images and brief visual scenes",
+                "simple activities like walking or talking",
+                "familiar places and everyday situations",
+                "short conversations with known people"
+            ],
+            'N3': [
+                "vague impressions and unclear imagery",
+                "minimal visual content with basic shapes",
+                "simple sensations without clear narrative"
+            ],
+            'W': [
+                "realistic thoughts about daily activities",
+                "planning and problem-solving scenarios"
+            ]
+        }
+        
+        annotations_dir = self.base_dir.parent / "processed" / "annotations"
+        annotations_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Create annotation files
+        import json
+        import random
+        
+        for i in range(1, 21):  # 20 sample annotations
+            annotation = {
+                "subject_id": f"S{i:03d}",
+                "recording_session": f"R{random.randint(1,4):02d}",
+                "sleep_stage_sequence": [],
+                "dream_reports": [],
+                "timestamps": []
+            }
             
-            try:
-                wget.download(sample['url'], filepath)
-                file_size = os.path.getsize(filepath) / (1024*1024)
-                print(f"\n      ✅ Downloaded: {file_size:.1f}MB")
-                downloaded_count += 1
-                total_size_mb += file_size
+            # Generate 30-minute worth of data (1800 30-second epochs)
+            for epoch in range(60):  # Simplified to 60 epochs
+                stage = random.choice(['W', 'N1', 'N2', 'N3', 'REM'])
+                timestamp = epoch * 30  # 30-second epochs
                 
-            except Exception as e:
-                print(f"\n      ❌ Failed: {str(e)}")
-                failed_downloads.append(sample['name'])
-                continue
-    
-    print(f"\n🎉 Comprehensive Dataset Download Summary:")
-    print(f"   📊 Files downloaded: {downloaded_count}/{len(samples)}")
-    print(f"   💾 Total size: {total_size_mb:.1f}MB")
-    print(f"   📁 Location: data/raw/comprehensive_1gb/")
-    
-    if failed_downloads:
-        print(f"   ⚠️ Failed downloads: {len(failed_downloads)}")
-        for failed in failed_downloads[:5]:
-            print(f"      - {failed}")
-        if len(failed_downloads) > 5:
-            print(f"      ... and {len(failed_downloads)-5} more")
-    
-    # Summary by category
-    print(f"\n📊 Dataset Composition:")
-    for category, cat_samples in categories.items():
-        cat_count = sum(1 for s in cat_samples if s['name'] not in failed_downloads)
-        print(f"   🧠 {category}: {cat_count} files")
-    
-    print(f"\n🎯 Ready for comprehensive RTX 4050 training!")
-    print(f"💡 This dataset provides rich diversity for robust dream decoding models!")
-    
-    return downloaded_count, total_size_mb
+                annotation["sleep_stage_sequence"].append(stage)
+                annotation["timestamps"].append(timestamp)
+                
+                # Add dream content for REM and some N2 stages
+                if stage == 'REM' or (stage == 'N2' and random.random() < 0.3):
+                    dream_content = random.choice(dream_templates.get(stage, ["unclear imagery"]))
+                    annotation["dream_reports"].append({
+                        "epoch": epoch,
+                        "content": dream_content,
+                        "vividness": random.uniform(0.6, 1.0) if stage == 'REM' else random.uniform(0.2, 0.6)
+                    })
+            
+            # Save annotation
+            with open(annotations_dir / f"subject_{i:03d}_annotations.json", 'w') as f:
+                json.dump(annotation, f, indent=2)
+        
+        print(f"Created annotations for 20 subjects in {annotations_dir}")
 
-def verify_comprehensive_dataset():
-    """Verify the comprehensive dataset"""
-    dataset_dir = 'data/raw/comprehensive_1gb'
+def main():
+    """Main download function"""
+    print("🧠 DreamCrafter Dataset Downloader")
+    print("=" * 40)
     
-    if not os.path.exists(dataset_dir):
-        print("❌ Comprehensive dataset directory not found!")
-        return False
+    downloader = DatasetDownloader()
     
-    files = os.listdir(dataset_dir)
-    edf_files = [f for f in files if f.endswith('.edf')]
-    
-    # Categorize files
-    sleep_cassette = [f for f in edf_files if f.startswith('SC4')]
-    sleep_telemetry = [f for f in edf_files if f.startswith('ST7')]
-    motor_files = [f for f in edf_files if f.startswith('S0')]
-    
-    total_size = sum(os.path.getsize(os.path.join(dataset_dir, f)) for f in edf_files) / (1024*1024)
-    
-    print(f"\n🔍 Comprehensive Dataset Verification:")
-    print(f"   📄 Total EEG files: {len(edf_files)}")
-    print(f"   😴 Sleep cassette recordings: {len(sleep_cassette)}")
-    print(f"   📡 Sleep telemetry recordings: {len(sleep_telemetry)}")
-    print(f"   🏃 Motor movement/imagery: {len(motor_files)}")
-    print(f"   💾 Total dataset size: {total_size:.1f}MB")
-    print(f"   🎯 Comprehensive dataset ready for training!")
-    
-    return len(edf_files) >= 40
+    try:
+        # Download real neuroscience datasets
+        downloader.download_sleep_edf()
+        downloader.download_dreams_db()
+        
+        # Create dream content annotations
+        downloader.create_dream_annotations()
+        
+        print("\n✅ Dataset download completed successfully!")
+        print(f"Total data downloaded to: {downloader.base_dir}")
+        
+    except Exception as e:
+        print(f"❌ Error during download: {e}")
 
-if __name__ == '__main__':
-    downloaded, size_mb = download_comprehensive_1gb_dataset()
-    verify_comprehensive_dataset()
-    
-    print(f"\n✅ Comprehensive 1GB dataset ready!")
-    print(f"📊 {downloaded} files, {size_mb:.1f}MB total")
-    print(f"🚀 Proceed to preprocessing and model training!")
+if __name__ == "__main__":
+    main()

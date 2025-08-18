@@ -1,0 +1,210 @@
+{
+  "subject_id": "S017",
+  "recording_session": "R01",
+  "sleep_stage_sequence": [
+    "N2",
+    "W",
+    "W",
+    "W",
+    "REM",
+    "W",
+    "REM",
+    "N2",
+    "N3",
+    "N3",
+    "N1",
+    "N2",
+    "N1",
+    "N1",
+    "N2",
+    "N3",
+    "N1",
+    "REM",
+    "N1",
+    "W",
+    "REM",
+    "N3",
+    "REM",
+    "REM",
+    "W",
+    "W",
+    "REM",
+    "N2",
+    "W",
+    "W",
+    "W",
+    "N3",
+    "N1",
+    "REM",
+    "N2",
+    "N3",
+    "N1",
+    "N3",
+    "W",
+    "N3",
+    "W",
+    "N3",
+    "N3",
+    "N2",
+    "W",
+    "N2",
+    "W",
+    "W",
+    "W",
+    "REM",
+    "REM",
+    "N2",
+    "REM",
+    "W",
+    "REM",
+    "N1",
+    "N2",
+    "N2",
+    "W",
+    "N3"
+  ],
+  "dream_reports": [
+    {
+      "epoch": 0,
+      "content": "fragmented images and brief visual scenes",
+      "vividness": 0.5301337509775159
+    },
+    {
+      "epoch": 4,
+      "content": "emotional conversations and dramatic events",
+      "vividness": 0.798894870447455
+    },
+    {
+      "epoch": 6,
+      "content": "emotional conversations and dramatic events",
+      "vividness": 0.7022640878264934
+    },
+    {
+      "epoch": 14,
+      "content": "familiar places and everyday situations",
+      "vividness": 0.24470924360416066
+    },
+    {
+      "epoch": 17,
+      "content": "vivid colorful landscapes with flying sensations",
+      "vividness": 0.8582511309942963
+    },
+    {
+      "epoch": 20,
+      "content": "emotional conversations and dramatic events",
+      "vividness": 0.876734780052451
+    },
+    {
+      "epoch": 22,
+      "content": "emotional conversations and dramatic events",
+      "vividness": 0.8184697009073012
+    },
+    {
+      "epoch": 23,
+      "content": "complex social interactions with family and friends",
+      "vividness": 0.7494674095099693
+    },
+    {
+      "epoch": 26,
+      "content": "complex social interactions with family and friends",
+      "vividness": 0.8207964235359143
+    },
+    {
+      "epoch": 33,
+      "content": "vivid colorful landscapes with flying sensations",
+      "vividness": 0.759394470929073
+    },
+    {
+      "epoch": 49,
+      "content": "complex social interactions with family and friends",
+      "vividness": 0.7356010129631751
+    },
+    {
+      "epoch": 50,
+      "content": "complex social interactions with family and friends",
+      "vividness": 0.922926887897778
+    },
+    {
+      "epoch": 52,
+      "content": "bizarre transformations and impossible scenarios",
+      "vividness": 0.9816834584675851
+    },
+    {
+      "epoch": 54,
+      "content": "emotional conversations and dramatic events",
+      "vividness": 0.9672108566621179
+    },
+    {
+      "epoch": 56,
+      "content": "familiar places and everyday situations",
+      "vividness": 0.4552062616179653
+    },
+    {
+      "epoch": 57,
+      "content": "fragmented images and brief visual scenes",
+      "vividness": 0.5274387037549464
+    }
+  ],
+  "timestamps": [
+    0,
+    30,
+    60,
+    90,
+    120,
+    150,
+    180,
+    210,
+    240,
+    270,
+    300,
+    330,
+    360,
+    390,
+    420,
+    450,
+    480,
+    510,
+    540,
+    570,
+    600,
+    630,
+    660,
+    690,
+    720,
+    750,
+    780,
+    810,
+    840,
+    870,
+    900,
+    930,
+    960,
+    990,
+    1020,
+    1050,
+    1080,
+    1110,
+    1140,
+    1170,
+    1200,
+    1230,
+    1260,
+    1290,
+    1320,
+    1350,
+    1380,
+    1410,
+    1440,
+    1470,
+    1500,
+    1530,
+    1560,
+    1590,
+    1620,
+    1650,
+    1680,
+    1710,
+    1740,
+    1770
+  ]
+}

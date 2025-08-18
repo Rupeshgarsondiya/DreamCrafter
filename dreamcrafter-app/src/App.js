@@ -1,19 +1,16 @@
 import React, { useState, useEffect } from 'react';
+
 import './App.css';
 
-// Import layout components
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 
-// Import page components
 import LandingPage from './components/pages/LandingPage';
-// ✅ REMOVED: HomePage and FeaturesPage since they're not used
 import LoginPage from './components/pages/LoginPage';
-import SignupPage from './components/pages/SignUpPage';
+import SignUpPage from './components/pages/SignUpPage';
 import Dashboard from './components/pages/Dashboard';
 
-// Import AuthService
-import AuthService from './services/auth';
+import authService from './services/auth';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('landing');
@@ -21,21 +18,20 @@ function App() {
 
   useEffect(() => {
     const checkAuth = () => {
-      const authStatus = AuthService.isAuthenticated();
+      const authStatus = authService.isAuthenticated();
       setIsAuthenticated(authStatus);
-      
-      // If authenticated and on login/signup, go to dashboard
+
       if (authStatus && (currentPage === 'login' || currentPage === 'signup')) {
         setCurrentPage('dashboard');
       }
-      // Keep users on landing page (which has all sections)
-      else if (authStatus && currentPage === 'landing') {
-        setCurrentPage('landing'); // ✅ STAY ON LANDING PAGE
+
+      if (!authStatus && currentPage === 'dashboard') {
+        setCurrentPage('landing');
       }
     };
 
     checkAuth();
-    
+
     const handleStorageChange = () => {
       checkAuth();
     };
@@ -47,51 +43,61 @@ function App() {
   const handleAuthChange = (authStatus) => {
     setIsAuthenticated(authStatus);
     if (authStatus) {
-      setCurrentPage('landing'); // ✅ STAY ON LANDING PAGE WHEN AUTHENTICATED
+      setCurrentPage('dashboard');
     } else {
       setCurrentPage('landing');
     }
   };
 
-  const renderPage = () => {
-    switch (currentPage) {
-      case 'landing':
-      case 'home':      // ✅ REDIRECT TO LANDING
-      case 'features':  // ✅ REDIRECT TO LANDING  
-      case 'news':      // ✅ REDIRECT TO LANDING
-        return <LandingPage setCurrentPage={setCurrentPage} isAuthenticated={isAuthenticated} />;
-      case 'login':
-        return <LoginPage setCurrentPage={setCurrentPage} onAuthChange={handleAuthChange} />;
-      case 'signup':
-        return <SignupPage setCurrentPage={setCurrentPage} />;
-      case 'dashboard':
-        return <Dashboard setCurrentPage={setCurrentPage} />;
-      default:
-        return <LandingPage setCurrentPage={setCurrentPage} isAuthenticated={isAuthenticated} />;
+  const handlePageChange = (page) => {
+    if (page === 'dashboard' && !isAuthenticated) {
+      alert('Please login to access the Dashboard.');
+      setCurrentPage('login');
+    } else {
+      setCurrentPage(page);
     }
   };
 
-  const showNavFooter = currentPage !== 'login' && currentPage !== 'signup';
-
-  return (
-    <div className="App">
-      {showNavFooter && (
-        <Navbar 
-          setCurrentPage={setCurrentPage}
-          currentPage={currentPage}
+ // App.js
+return (
+  <>
+    {currentPage === 'landing' && (
+      <>
+        <Navbar
           isAuthenticated={isAuthenticated}
+          setCurrentPage={handlePageChange}
+          currentPage={currentPage}
         />
-      )}
-      
-      <main>
-        {renderPage()}
-      </main>
-      
-      {showNavFooter && (
-        <Footer setCurrentPage={setCurrentPage} />
-      )}
-    </div>
-  );
+        {/* Add the class for homepage content */}
+        <div className="landing-main-content">
+          <LandingPage />
+        </div>
+        <Footer />
+      </>
+    )}
+
+    {currentPage === 'login' && (
+      <div className="login-main-content">
+        <LoginPage
+          onAuthChange={handleAuthChange}
+          setCurrentPage={handlePageChange}
+        />
+      </div>
+    )}
+
+    {currentPage === 'signup' && (
+      <div className="signup-main-content">
+        <SignUpPage
+          onAuthChange={handleAuthChange}
+          setCurrentPage={handlePageChange}
+        />
+      </div>
+    )}
+
+    {currentPage === 'dashboard' && isAuthenticated && <Dashboard onAuthChange={handleAuthChange} />}
+  </>
+);
+
 }
 
 export default App;
