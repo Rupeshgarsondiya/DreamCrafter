@@ -40,29 +40,75 @@ const Dashboard = ({ onAuthChange }) => {
     }
   };
 
-  const handleAnalysis = () => {
-    if (!uploadedFile) return;
-    
+  // Updated Dashboard.js with database integration
+const handleAnalysis = async () => {
+    if (!uploadedFile) {
+        setError('Please upload an EDF file first');
+        return;
+    }
+
     setIsAnalyzing(true);
-    // Simulate analysis process
-    setTimeout(() => {
-      setIsAnalyzing(false);
-      setAnalysisComplete(true);
-      setDreamResults({
-        description: "Your dreams reveal a profound journey through crystalline underwater realms, where ancient wisdom whispers through coral formations and ethereal light dances through deep ocean currents. The subconscious mind weaves tales of transformation and spiritual awakening.",
-        images: [
-          { id: 1, title: "Cosmic Ocean Dreams", emoji: "🌊✨" },
-          { id: 2, title: "Crystal Cave Visions", emoji: "💎🏔️" },
-          { id: 3, title: "Ethereal Forest Paths", emoji: "🌲🌙" }
-        ],
-        insights: [
-          "Deep emotional processing detected",
-          "Creative inspiration pathways active",
-          "Spiritual connectivity enhanced"
-        ]
-      });
-    }, 3000);
-  };
+    setError(null);
+    
+    try {
+        // Single API call that handles upload, processing, and database storage
+        const formData = new FormData();
+        formData.append('eeg_file', uploadedFile);
+        
+        const response = await axios.post('/api/dreams/upload-process/', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            onUploadProgress: (progressEvent) => {
+                const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                setUploadProgress(progress);
+            }
+        });
+
+        if (response.data.success) {
+            const dreamData = response.data.dream_record;
+            
+            setAnalysisComplete(true);
+            setDreamResults({
+                id: dreamData.id,
+                description: dreamData.dream_description,
+                confidence: dreamData.confidence_score,
+                analysisDetails: {
+                    total_windows_processed: dreamData.num_windows_processed,
+                    dream_segments_generated: dreamData.num_dream_segments,
+                    processing_time: dreamData.processing_time_display,
+                    model_version: dreamData.model_version
+                },
+                insights: [
+                    `Confidence Score: ${(dreamData.confidence_score * 100).toFixed(1)}%`,
+                    `Sleep Stage: ${getSleepStageName(dreamData.detected_sleep_stage)}`,
+                    `Processing Time: ${dreamData.processing_time_display}`
+                ]
+            });
+        } else {
+            throw new Error('Processing failed');
+        }
+
+    } catch (error) {
+        console.error('Analysis failed:', error);
+        setError(error.response?.data?.error || 'Analysis failed. Please try again.');
+    } finally {
+        setIsAnalyzing(false);
+        setUploadProgress(0);
+    }
+};
+
+const getSleepStageName = (stage) => {
+    const stages = {
+        0: 'Wake',
+        1: 'Light Sleep (N1)',
+        2: 'Deep Sleep (N2)', 
+        3: 'Deep Sleep (N3)',
+        4: 'REM Sleep'
+    };
+    return stages[stage] || 'Unknown';
+};
+
 
   const handleLogout = () => {
     onAuthChange(false);

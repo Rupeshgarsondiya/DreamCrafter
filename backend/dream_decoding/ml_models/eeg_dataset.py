@@ -87,6 +87,17 @@ class EEGDreamDataset(Dataset):
             tokens.extend([self.word_to_idx['<PAD>']] * (self.max_sequence_length - len(tokens)))
         
         return tokens
+    
+    def save_vocabulary(self, save_path):
+        """Save vocabulary for inference"""
+        save_path = Path(save_path)
+        save_path.parent.mkdir(parents=True, exist_ok=True)
+
+        with open(save_path, 'w') as f:
+            json.dump(self.word_to_idx, f, indent=2)
+
+        logger.info(f"✅ Saved vocabulary with {len(self.word_to_idx)} words to {save_path}")
+
 
 
     def _load_all_data(self):
@@ -200,19 +211,24 @@ def pad_collate_fn(batch):
     return features_padded, sleep_stages_tensor, dream_tokens_tensor, metadata
 
 def create_data_loaders(features_dir, annotations_dir, batch_size=8, num_workers=0, test_size=0.2):
-    """Create data loaders with fixed settings"""
+    """Create data loaders with vocabulary saving"""
     dataset = EEGDreamDataset(features_dir, annotations_dir)
+    
     if len(dataset) == 0:
         raise ValueError("Dataset is empty")
-
-    # Split dataset
+    
+    # ✅ SAVE VOCABULARY FOR INFERENCE
+    vocab_path = Path("data/processed/vocabulary.json")
+    dataset.save_vocabulary(vocab_path)
+    
+    # Rest of your existing code stays the same...
     train_indices, val_indices = train_test_split(
         range(len(dataset)), test_size=test_size, random_state=42
     )
     
     train_dataset = torch.utils.data.Subset(dataset, train_indices)
     val_dataset = torch.utils.data.Subset(dataset, val_indices)
-
+    
     train_loader = DataLoader(
         train_dataset, batch_size=batch_size, shuffle=True,
         num_workers=0, pin_memory=False, collate_fn=pad_collate_fn, drop_last=True
@@ -222,10 +238,12 @@ def create_data_loaders(features_dir, annotations_dir, batch_size=8, num_workers
         val_dataset, batch_size=batch_size, shuffle=False,
         num_workers=0, pin_memory=False, collate_fn=pad_collate_fn, drop_last=True
     )
-
+    
     logger.info(f"Created train loader: {len(train_dataset)} samples")
     logger.info(f"Created val loader: {len(val_dataset)} samples")
+    
     return train_loader, val_loader
+
 
 if __name__ == "__main__":
     features_dir = "data/processed/comprehensive_features"

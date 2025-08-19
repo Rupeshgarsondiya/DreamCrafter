@@ -1,4 +1,3 @@
-
 ```
 DreamCrafter
 ├─ README.md
@@ -23,9 +22,11 @@ DreamCrafter
 │  │  └─ wsgi.py
 │  ├─ dream_decoding
 │  │  └─ ml_models
+│  │     ├─ create_missing_annotations.py
 │  │     ├─ eeg_dataset.py
 │  │     ├─ eeg_to_text_model.py
 │  │     ├─ flexible_eeg_preprocessing.py
+│  │     ├─ gpu_accelerated_features.py
 │  │     ├─ inference_eeg_text.py
 │  │     └─ train_eeg_text.py
 │  └─ manage.py
@@ -51,36 +52,49 @@ DreamCrafter
 │  │  │  ├─ subject_017_annotations.json
 │  │  │  ├─ subject_018_annotations.json
 │  │  │  ├─ subject_019_annotations.json
-│  │  │  └─ subject_020_annotations.json
-│  │  └─ comprehensive_features
-│  │     ├─ S001R01_features.h5
-│  │     ├─ S001R02_features.h5
-│  │     ├─ S001R03_features.h5
-│  │     ├─ S001R04_features.h5
-│  │     ├─ S002R01_features.h5
-│  │     ├─ S002R02_features.h5
-│  │     ├─ S002R03_features.h5
-│  │     ├─ S002R04_features.h5
-│  │     ├─ S003R01_features.h5
-│  │     ├─ S003R02_features.h5
-│  │     ├─ S003R03_features.h5
-│  │     ├─ S003R04_features.h5
-│  │     ├─ S004R01_features.h5
-│  │     ├─ S004R02_features.h5
-│  │     ├─ S004R03_features.h5
-│  │     ├─ S004R04_features.h5
-│  │     ├─ S005R01_features.h5
-│  │     ├─ S005R02_features.h5
-│  │     ├─ S005R03_features.h5
-│  │     ├─ S005R04_features.h5
-│  │     ├─ SC4001E0-PSG_features.h5
-│  │     ├─ ST7011J0-PSG_features.h5
-│  │     ├─ ST7012J0-PSG_features.h5
-│  │     ├─ ST7021J0-PSG_features.h5
-│  │     ├─ ST7022J0-PSG_features.h5
-│  │     ├─ ST7051J0-PSG_features.h5
-│  │     ├─ ST7061J0-PSG_features.h5
-│  │     └─ ST7081J0-PSG_features.h5
+│  │  │  ├─ subject_020_annotations.json
+│  │  │  ├─ subject_021_annotations.json
+│  │  │  ├─ subject_022_annotations.json
+│  │  │  ├─ subject_041_annotations.json
+│  │  │  ├─ subject_051_annotations.json
+│  │  │  ├─ subject_061_annotations.json
+│  │  │  ├─ subject_071_annotations.json
+│  │  │  └─ subject_081_annotations.json
+│  │  ├─ comprehensive_features
+│  │  │  ├─ S001R01_features.h5
+│  │  │  ├─ S001R02_features.h5
+│  │  │  ├─ S001R03_features.h5
+│  │  │  ├─ S001R04_features.h5
+│  │  │  ├─ S002R01_features.h5
+│  │  │  ├─ S002R02_features.h5
+│  │  │  ├─ S002R03_features.h5
+│  │  │  ├─ S002R04_features.h5
+│  │  │  ├─ S003R01_features.h5
+│  │  │  ├─ S003R02_features.h5
+│  │  │  ├─ S003R03_features.h5
+│  │  │  ├─ S003R04_features.h5
+│  │  │  ├─ S004R01_features.h5
+│  │  │  ├─ S004R02_features.h5
+│  │  │  ├─ S004R03_features.h5
+│  │  │  ├─ S004R04_features.h5
+│  │  │  ├─ S005R01_features.h5
+│  │  │  ├─ S005R02_features.h5
+│  │  │  ├─ S005R03_features.h5
+│  │  │  ├─ S005R04_features.h5
+│  │  │  ├─ SC4001E0-PSG_features.h5
+│  │  │  ├─ SC4002E0-PSG_features.h5
+│  │  │  ├─ SC4011E0-PSG_features.h5
+│  │  │  ├─ SC4012E0-PSG_features.h5
+│  │  │  ├─ ST7011J0-PSG_features.h5
+│  │  │  ├─ ST7012J0-PSG_features.h5
+│  │  │  ├─ ST7021J0-PSG_features.h5
+│  │  │  ├─ ST7022J0-PSG_features.h5
+│  │  │  ├─ ST7041J0-PSG_features.h5
+│  │  │  ├─ ST7051J0-PSG_features.h5
+│  │  │  ├─ ST7061J0-PSG_features.h5
+│  │  │  ├─ ST7071J0-PSG_features.h5
+│  │  │  └─ ST7081J0-PSG_features.h5
+│  │  └─ vocab_info.json
 │  └─ raw
 │     ├─ comprehensive_1gb
 │     │  ├─ S001R01.edf
@@ -185,6 +199,12 @@ DreamCrafter
 │  │     └─ axios.js
 │  └─ tailwind.config.js
 ├─ models
+│  ├─ checkpoints
+│  │  ├─ checkpoint_epoch_1.pth
+│  │  ├─ checkpoint_epoch_2.pth
+│  │  ├─ checkpoint_epoch_3.pth
+│  │  ├─ checkpoint_epoch_4.pth
+│  │  └─ eeg_text_best.pth
 │  └─ eeg_text_best.pth
 ├─ requirements.txt
 └─ scripts
