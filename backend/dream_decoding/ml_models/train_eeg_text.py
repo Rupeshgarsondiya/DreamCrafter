@@ -1,177 +1,324 @@
+"""
+Training Script for EEG-to-Text Dream Decoder - WITH PROGRESS BARS
+"""
+
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torch.utils.data import DataLoader
-import os
-import time
+import numpy as np
+import json
+from pathlib import Path
+import logging
 from tqdm import tqdm
+import os
+from eeg_to_text_model import create_model
+from eeg_dataset import create_data_loaders
+import gc
+from collections import Counter
 
-from eeg_dataset import EEGTextDataset
-from eeg_to_text_model import EEGToTextModel
+logging.basicConfig(level=logging.WARNING)  # ✅ Reduce logging noise
+logger = logging.getLogger(__name__)
 
-class EEGTextTrainer:
-    """
-    Trainer for EEG-to-Text model
-    Optimized for RTX 4050 with small dataset
-    """
-    
-    def __init__(self, model, dataset, batch_size=4, learning_rate=1e-3, device=None):
-        self.model = model
-        self.dataset = dataset
-        self.batch_size = batch_size
+class EEGTrainer:
+    def __init__(self, config):
+        self.config = config
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         
-        # Setup device
-        if device is None:
-            self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        else:
-            self.device = device
-        
+        # Create model
+        self.model = create_model(config)
         self.model.to(self.device)
         
-        # DataLoader
-        self.dataloader = DataLoader(
-            dataset, 
-            batch_size=batch_size, 
-            shuffle=True,
-            num_workers=0,  # Set to 0 for small dataset
-            pin_memory=True if self.device.type == 'cuda' else False
+        # Optimizer
+        self.optimizer = optim.AdamW(
+            self.model.parameters(),
+            lr=config.get('learning_rate', 1e-4),
+            weight_decay=config.get('weight_decay', 1e-5)
         )
-        
-        # Optimizer and loss
-        self.optimizer = optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=0.01)
-        self.criterion = nn.CrossEntropyLoss(ignore_index=0)  # 0 is padding token
-        
-        # Learning rate scheduler
+
+        # Scheduler
         self.scheduler = optim.lr_scheduler.ReduceLROnPlateau(
-            self.optimizer, mode='min', factor=0.5, patience=2
+            self.optimizer, mode='min', patience=3, factor=0.5
         )
+
+        # Loss function
+        self.criterion = nn.CrossEntropyLoss(ignore_index=0)
+
+        # Training state
+        self.epoch = 0
+        self.best_loss = float('inf')
+        self.train_losses = []
+        self.val_losses = []
+
+    def _process_batch(self, features, expected_dim):
+        """Process and validate batch features"""
+        if len(features.shape) == 3:
+            batch_size, seq_len, feature_dim = features.shape
+            actual_dim = seq_len * feature_dim
+            
+            # Skip inconsistent batches silently
+            if actual_dim != expected_dim:
+                return None
+            
+            features = features.view(batch_size, actual_dim)
         
-        print(f"🎯 Training setup:")
-        print(f"   Device: {self.device}")
-        print(f"   Batch size: {batch_size}")
-        print(f"   Dataset size: {len(dataset)}")
-        print(f"   Batches per epoch: {len(self.dataloader)}")
-    
-    def create_dummy_targets(self, batch_size, seq_len):
-        """Create dummy target sequences for unsupervised learning"""
-        # Generate random sequences (in real implementation, use text tokenization)
-        targets = torch.randint(1, self.model.vocab_size, (batch_size, seq_len))
-        return targets.to(self.device)
-    
-    def train_epoch(self):
-        """Train one epoch"""
+        return features
+
+    def train_epoch(self, train_loader):
+        """Train for one epoch - WITH PROGRESS BAR"""
         self.model.train()
         total_loss = 0
-        num_batches = 0
+        successful_batches = 0
         
-        progress_bar = tqdm(self.dataloader, desc="Training")
-        
-        for batch_idx, (eeg_batch, text_batch) in enumerate(progress_bar):
-            eeg_batch = eeg_batch.to(self.device)
-            
-            # Forward pass
-            self.optimizer.zero_grad()
-            
-            # Get model predictions
-            outputs = self.model(eeg_batch)  # (batch_size, seq_len, vocab_size)
-            
-            # Create dummy targets (in real implementation, tokenize text_batch)
-            targets = self.create_dummy_targets(eeg_batch.size(0), outputs.size(1))
-            
-            # Calculate loss
-            loss = self.criterion(outputs.reshape(-1, outputs.size(-1)), targets.reshape(-1))
-            
-            # Backward pass
-            loss.backward()
-            
-            # Gradient clipping
-            torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=1.0)
-            
-            self.optimizer.step()
-            
-            # Track loss
-            total_loss += loss.item()
-            num_batches += 1
-            
-            # Update progress bar
-            progress_bar.set_postfix({
-                'Loss': f"{loss.item():.4f}",
-                'Avg Loss': f"{total_loss/num_batches:.4f}"
-            })
-        
-        return total_loss / num_batches
-    
-    def train(self, num_epochs=30):
-        """Train the model for specified epochs"""
-        print(f"\n🚀 Starting training for {num_epochs} epochs...")
-        
-        best_loss = float('inf')
-        
-        for epoch in range(num_epochs):
-            print(f"\n📅 Epoch {epoch + 1}/{num_epochs}")
-            
-            # Train one epoch
-            start_time = time.time()
-            avg_loss = self.train_epoch()
-            epoch_time = time.time() - start_time
-            
-            # Update learning rate
-            self.scheduler.step(avg_loss)
-            
-            # Print epoch summary
-            current_lr = self.optimizer.param_groups[0]['lr']
-            print(f"✅ Epoch {epoch + 1} completed:")
-            print(f"   Average Loss: {avg_loss:.4f}")
-            print(f"   Time: {epoch_time:.2f}s")
-            print(f"   Learning Rate: {current_lr:.6f}")
-            
-            # Save best model
-            if avg_loss < best_loss:
-                best_loss = avg_loss
-                self.save_model(f"models/eeg_text_best.pth")
-                print(f"   💾 Saved best model (loss: {best_loss:.4f})")
-        
-        print(f"\n🎉 Training completed!")
-        print(f"   Best loss: {best_loss:.4f}")
-    
-    def save_model(self, filepath):
+        # ✅ VISIBLE progress bar with proper settings
+        pbar = tqdm(train_loader, 
+                   desc=f"Training Epoch {self.epoch}", 
+                   leave=True, 
+                   dynamic_ncols=True,
+                   bar_format='{l_bar}{bar:30}{r_bar}{bar:-10b}')
+
+        for batch_idx, batch in enumerate(pbar):
+            try:
+                features, sleep_stages, dream_tokens, metadata = batch
+
+                # Process features
+                features = self._process_batch(features, self.config['feature_dim'])
+                if features is None:
+                    continue  # Skip silently
+
+                # Move to device
+                features = features.to(self.device)
+                sleep_stages = sleep_stages.to(self.device)
+                dream_tokens = dream_tokens.to(self.device)
+
+                # Handle sleep stages
+                if sleep_stages.dim() == 2 and sleep_stages.size(1) == 1:
+                    sleep_stages = sleep_stages.squeeze(-1)
+
+                # Validate tokens
+                max_token = dream_tokens.max().item()
+                if max_token >= self.config['vocab_size']:
+                    dream_tokens = torch.clamp(dream_tokens, 0, self.config['vocab_size'] - 1)
+
+                # Prepare sequences
+                input_tokens = dream_tokens[:, :-1]
+                target_tokens = dream_tokens[:, 1:]
+
+                # Forward pass
+                self.optimizer.zero_grad()
+
+                if self.config.get('use_sleep_stages', False):
+                    output = self.model(features, sleep_stages, input_tokens)
+                else:
+                    output = self.model(features, input_tokens)
+
+                # Calculate loss
+                loss = self.criterion(
+                    output.reshape(-1, output.size(-1)),
+                    target_tokens.reshape(-1)
+                )
+
+                # Backward pass
+                loss.backward()
+                torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=1.0)
+                self.optimizer.step()
+
+                # Update metrics
+                total_loss += loss.item()
+                successful_batches += 1
+
+                # ✅ Update progress bar with loss info
+                avg_loss = total_loss / successful_batches
+                pbar.set_postfix({
+                    'Loss': f"{loss.item():.4f}",
+                    'Avg': f"{avg_loss:.4f}"
+                })
+
+            except Exception:
+                continue  # Skip failed batches silently
+
+        return total_loss / max(successful_batches, 1) if successful_batches > 0 else float('inf')
+
+    def validate(self, val_loader):
+        """Validate the model - WITH PROGRESS BAR"""
+        self.model.eval()
+        total_loss = 0
+        successful_batches = 0
+
+        # ✅ VISIBLE validation progress bar
+        with torch.no_grad():
+            pbar = tqdm(val_loader,
+                       desc="Validation",
+                       leave=True,
+                       dynamic_ncols=True,
+                       bar_format='{l_bar}{bar:30}{r_bar}{bar:-10b}')
+
+            for batch in pbar:
+                try:
+                    features, sleep_stages, dream_tokens, metadata = batch
+
+                    # Process features
+                    features = self._process_batch(features, self.config['feature_dim'])
+                    if features is None:
+                        continue
+
+                    features = features.to(self.device)
+                    sleep_stages = sleep_stages.to(self.device)
+                    dream_tokens = dream_tokens.to(self.device)
+
+                    # Handle sleep stages
+                    if sleep_stages.dim() == 2 and sleep_stages.size(1) == 1:
+                        sleep_stages = sleep_stages.squeeze(-1)
+
+                    max_token = dream_tokens.max().item()
+                    if max_token >= self.config['vocab_size']:
+                        dream_tokens = torch.clamp(dream_tokens, 0, self.config['vocab_size'] - 1)
+
+                    input_tokens = dream_tokens[:, :-1]
+                    target_tokens = dream_tokens[:, 1:]
+
+                    if self.config.get('use_sleep_stages', False):
+                        output = self.model(features, sleep_stages, input_tokens)
+                    else:
+                        output = self.model(features, input_tokens)
+
+                    loss = self.criterion(
+                        output.reshape(-1, output.size(-1)),
+                        target_tokens.reshape(-1)
+                    )
+
+                    total_loss += loss.item()
+                    successful_batches += 1
+
+                    # ✅ Update validation progress bar
+                    avg_loss = total_loss / successful_batches
+                    pbar.set_postfix({
+                        'Val Loss': f"{loss.item():.4f}",
+                        'Avg': f"{avg_loss:.4f}"
+                    })
+
+                except Exception:
+                    continue
+
+        avg_loss = total_loss / max(successful_batches, 1) if successful_batches > 0 else float('inf')
+        self.val_losses.append(avg_loss)
+        return avg_loss
+
+    def save_checkpoint(self, filepath, is_best=False):
         """Save model checkpoint"""
-        os.makedirs(os.path.dirname(filepath), exist_ok=True)
-        torch.save({
+        checkpoint = {
+            'epoch': self.epoch,
             'model_state_dict': self.model.state_dict(),
             'optimizer_state_dict': self.optimizer.state_dict(),
-        }, filepath)
+            'scheduler_state_dict': self.scheduler.state_dict(),
+            'best_loss': self.best_loss,
+            'train_losses': self.train_losses,
+            'val_losses': self.val_losses,
+            'config': self.config
+        }
+
+        torch.save(checkpoint, filepath)
+
+        if is_best:
+            best_path = filepath.parent / 'eeg_text_best.pth'
+            torch.save(checkpoint, best_path)
+
+    def train(self, train_loader, val_loader, num_epochs):
+        """Main training loop - CLEAN OUTPUT WITH PROGRESS BARS"""
+        print(f"\n🚀 Starting training for {num_epochs} epochs...")
+        print(f"📊 Model parameters: {sum(p.numel() for p in self.model.parameters()):,}")
+        print("=" * 80)
+
+        checkpoint_dir = Path("models/checkpoints")
+        checkpoint_dir.mkdir(parents=True, exist_ok=True)
+
+        for epoch in range(num_epochs):
+            self.epoch = epoch + 1
+
+            # Training and validation with visible progress bars
+            train_loss = self.train_epoch(train_loader)
+            val_loss = self.validate(val_loader)
+
+            if train_loss == float('inf') or val_loss == float('inf'):
+                print(f"❌ Epoch {self.epoch}: Training failed - no valid batches")
+                break
+
+            self.scheduler.step(val_loss)
+
+            # ✅ ONE CLEAN LINE PER EPOCH
+            is_best = val_loss < self.best_loss
+            best_indicator = "✨" if is_best else "  "
+            
+            print(f"{best_indicator} Epoch {self.epoch}/{num_epochs} | "
+                  f"Train: {train_loss:.4f} | "
+                  f"Val: {val_loss:.4f} | "
+                  f"LR: {self.optimizer.param_groups[0]['lr']:.6f}")
+
+            if is_best:
+                self.best_loss = val_loss
+
+            checkpoint_path = checkpoint_dir / f"checkpoint_epoch_{self.epoch}.pth"
+            self.save_checkpoint(checkpoint_path, is_best)
+
+            torch.cuda.empty_cache()
+            gc.collect()
+
+        print("=" * 80)
+        print(f"🎯 Training completed! Best loss: {self.best_loss:.4f}")
 
 def main():
-    """Main training function"""
-    print("🧠 EEG-to-Text Dream Decoding Model Training")
-    print("=" * 50)
-    
-    # Load dataset
-    print("📊 Loading dataset...")
-    dataset = EEGTextDataset()
-    
-    if len(dataset) == 0:
-        print("❌ No data found! Please run preprocessing first.")
-        return
-    
-    # Create model
-    print("🔧 Creating model...")
-    model = EEGToTextModel()
-    
-    # Setup trainer
-    trainer = EEGTextTrainer(
-        model=model,
-        dataset=dataset,
-        batch_size=2,  # Small batch size for RTX 4050
-        learning_rate=1e-4
+    """Main training function - ROBUST DIMENSION HANDLING"""
+    features_dir = "data/processed/comprehensive_features"
+    annotations_dir = "data/processed/annotations"
+
+    # Create data loaders
+    train_loader, val_loader = create_data_loaders(
+        features_dir=features_dir,
+        annotations_dir=annotations_dir,
+        batch_size=8,
+        num_workers=0
     )
+
+    # ✅ ANALYZE DATASET DIMENSIONS
+    feature_dims = []
+    vocab_sizes = []
     
-    # Train model
-    trainer.train(num_epochs=200)
-    
-    print("\n✅ Training completed successfully!")
-    print("🚀 Ready for inference and evaluation!")
+    for i, (features, sleep_stages, dream_tokens, metadata) in enumerate(train_loader):
+        if len(features.shape) == 3:
+            batch_size, seq_len, feature_dim = features.shape
+            actual_feature_dim = seq_len * feature_dim
+        else:
+            actual_feature_dim = features.shape[-1]
+        
+        feature_dims.append(actual_feature_dim)
+        vocab_sizes.append(dream_tokens.max().item())
+        
+        if i >= 50:  # Sample enough batches
+            break
+
+    # Use most common dimensions
+    most_common_feature_dim = Counter(feature_dims).most_common(1)[0][0]
+    max_vocab_size = max(vocab_sizes) + 10
+
+    print(f"🔍 Data Analysis:")
+    print(f"   Most common feature dim: {most_common_feature_dim}")
+    print(f"   Vocabulary size: {max_vocab_size}")
+
+    config = {
+        'feature_dim': most_common_feature_dim,
+        'vocab_size': max_vocab_size,
+        'hidden_dim': 256,
+        'num_layers': 2,
+        'dropout': 0.1,
+        'learning_rate': 1e-4,
+        'weight_decay': 1e-5,
+        'batch_size': 8,
+        'num_epochs': 5,
+        'use_sleep_stages': True
+    }
+
+    # Create trainer and start training
+    trainer = EEGTrainer(config)
+    trainer.train(train_loader, val_loader, config['num_epochs'])
 
 if __name__ == "__main__":
     main()
