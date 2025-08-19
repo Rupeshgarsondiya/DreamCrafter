@@ -1,3 +1,4 @@
+
 ```
 DreamCrafter
 ├─ README.md
@@ -21,14 +22,25 @@ DreamCrafter
 │  │  ├─ urls.py
 │  │  └─ wsgi.py
 │  ├─ dream_decoding
-│  │  └─ ml_models
-│  │     ├─ create_missing_annotations.py
-│  │     ├─ eeg_dataset.py
-│  │     ├─ eeg_to_text_model.py
-│  │     ├─ flexible_eeg_preprocessing.py
-│  │     ├─ gpu_accelerated_features.py
-│  │     ├─ inference_eeg_text.py
-│  │     └─ train_eeg_text.py
+│  │  ├─ __init__.py
+│  │  ├─ admin.py
+│  │  ├─ apps.py
+│  │  ├─ migrations
+│  │  │  └─ __init__.py
+│  │  ├─ ml_models
+│  │  │  ├─ create_missing_annotations.py
+│  │  │  ├─ eeg_dataset.py
+│  │  │  ├─ eeg_to_text_model.py
+│  │  │  ├─ flexible_eeg_preprocessing.py
+│  │  │  ├─ gpu_accelerated_features.py
+│  │  │  ├─ inference_eeg_text.py
+│  │  │  ├─ inference_wrapper.py
+│  │  │  └─ train_eeg_text.py
+│  │  ├─ models.py
+│  │  ├─ serializers.py
+│  │  ├─ tests.py
+│  │  ├─ urls.py
+│  │  └─ views.py
 │  └─ manage.py
 ├─ data
 │  ├─ processed
@@ -194,7 +206,8 @@ DreamCrafter
 │  │  ├─ index.js
 │  │  ├─ logo.svg
 │  │  ├─ services
-│  │  │  └─ auth.js
+│  │  │  ├─ auth.js
+│  │  │  └─ dreamAPI.js
 │  │  └─ utils
 │  │     └─ axios.js
 │  └─ tailwind.config.js
