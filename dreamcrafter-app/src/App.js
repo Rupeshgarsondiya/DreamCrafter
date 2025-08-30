@@ -94,7 +94,12 @@ return (
       </div>
     )}
 
-    {currentPage === 'dashboard' && isAuthenticated && <Dashboard onAuthChange={handleAuthChange} />}
+    {currentPage === 'dashboard' && isAuthenticated && (
+      <Dashboard
+        onAuthChange={handleAuthChange}
+        onHome={() => handlePageChange('landing')}
+      />
+    )}
   </>
 );
 

@@ -48,11 +48,17 @@ class DreamAPI {
     /**
      * Get user's prediction history
      */
-    async getUserPredictions(page = 1, limit = 10, status = null) {
+    async getUserPredictions(page = 1, limit = 10, status = null, startDate = null, endDate = null) {
         try {
             let url = `dreams/predictions/?page=${page}&limit=${limit}`;
             if (status) {
                 url += `&status=${status}`;
+            }
+            if (startDate) {
+                url += `&start_date=${encodeURIComponent(startDate)}`;
+            }
+            if (endDate) {
+                url += `&end_date=${encodeURIComponent(endDate)}`;
             }
 
             const response = await axiosInstance.get(url);
@@ -92,6 +98,8 @@ class DreamAPI {
             };
         }
     }
+
+    // generateDreamImage removed per request
 
     /**
      * Get user profile with dream statistics
@@ -155,6 +163,46 @@ class DreamAPI {
                 success: false,
                 error: error.response?.data || { error: 'Health check failed' }
             };
+        }
+    }
+
+    /**
+     * Get frequency-based recommendations for user's sessions
+     */
+    async getUserRecommendations() {
+        try {
+            const response = await axiosInstance.get('dreams/recommendations/');
+            return { success: true, data: response.data };
+        } catch (error) {
+            return {
+                success: false,
+                error: error.response?.data || { error: 'Failed to get recommendations' },
+                message: this.extractErrorMessage(error.response?.data)
+            };
+        }
+    }
+
+    // Dream images
+    async listDreamImages(predictionId) {
+        try {
+            const response = await axiosInstance.get(`dreams/predictions/${predictionId}/images/`, { timeout: 60000 });
+            return { success: true, data: response.data };
+        } catch (error) {
+            return { success: false, error: error.response?.data };
+        }
+    }
+
+    async generateDreamImage(predictionId) {
+        try {
+            // First model load may take several minutes (model download + compile)
+            const response = await axiosInstance.post(
+                `dreams/predictions/${predictionId}/images/generate/`,
+                null,
+                { timeout: 600000 } // 10 minutes
+            );
+            return { success: true, data: response.data };
+        } catch (error) {
+            return { success: false, error: error.response?.data };
         }
     }
 

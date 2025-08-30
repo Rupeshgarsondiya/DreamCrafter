@@ -1,0 +1,912 @@
+/* Dream Analysis Modal Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: none;
+}
+
+.modal {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  border-radius: 0;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+  max-width: 90vw;
+  max-height: 90vh;
+  width: 1200px;
+  overflow: hidden;
+  animation: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modalHeader {
+  background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
+  padding: 24px 32px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modalHeader h2 {
+  color: #ffffff;
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  background: linear-gradient(45deg, #64b5f6, #81c784);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.closeButton {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #ffffff;
+  width: 40px;
+  height: 40px;
+  border-radius: 0;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeButton:hover { background: rgba(255, 255, 255, 0.2); }
+
+.modalTabs {
+  display: flex;
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  overflow-x: auto;
+  padding: 0 16px;
+}
+
+.tabButton {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 3px solid transparent;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.tabButton:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.tabButton.activeTab {
+  color: #64b5f6;
+  border-bottom-color: #64b5f6;
+  background: rgba(100, 181, 246, 0.1);
+}
+
+/* Dedicated active class for CSS Modules usage */
+.activeTab {
+  color: #64b5f6;
+  border-bottom-color: #64b5f6;
+  background: rgba(100, 181, 246, 0.1);
+}
+
+.tabIcon {
+  font-size: 16px;
+}
+
+.modalContent {
+  padding: 32px;
+  max-height: 60vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+.modalContent::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modalContent::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modalContent::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+.modalFooter {
+  padding: 24px 32px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.exportButton, .shareButton {
+  background: linear-gradient(135deg, #64b5f6, #81c784);
+  border: none;
+  color: #ffffff;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.exportButton:hover, .shareButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(100, 181, 246, 0.3);
+}
+
+.shareButton {
+  background: linear-gradient(135deg, #ff9800, #f44336);
+}
+
+.shareButton:hover {
+  box-shadow: 0 8px 25px rgba(255, 152, 0, 0.3);
+}
+
+/* Tab Content Styles */
+.tabContent {
+  animation: none;
+}
+
+.overviewGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.overviewCard {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.overviewCard:hover {
+  transform: none;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+  border-color: rgba(100, 181, 246, 0.3);
+}
+
+.cardIcon {
+  font-size: 32px;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.overviewCard h3 {
+  color: #ffffff;
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.dreamText {
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.summaryMetrics {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.summaryMetric {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.summaryMetric:last-child {
+  border-bottom: none;
+}
+
+.summaryMetric span:first-child {
+  color: rgba(139, 69, 19, 0.8);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.summaryValue {
+  color: #64b5f6;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.processingDetails p {
+  color: rgba(255, 255, 255, 0.8);
+  margin: 8px 0;
+  font-size: 14px;
+}
+
+.processingDetails strong {
+  color: #8B4513;
+  font-weight: 800;
+}
+
+/* Psychological Analysis */
+.psychologicalGrid {
+  display: grid;
+  gap: 24px;
+}
+
+.insightCard {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.insightCard h3 {
+  color: #ffffff;
+  margin: 0 0 20px 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.insightContent p {
+  color: rgba(255, 255, 255, 0.8);
+  margin: 12px 0;
+  line-height: 1.6;
+}
+
+.insightSection {
+  margin: 20px 0;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 0;
+  border-left: 4px solid #64b5f6;
+}
+
+.insightSection h4 {
+  color: #A569BD;
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+/* EEG Analysis */
+.eegGrid {
+  display: grid;
+  gap: 24px;
+}
+
+.eegCard {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.eegCard h3 {
+  color: #ffffff;
+  margin: 0 0 20px 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.eegMetrics {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.eegMetric {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 0;
+}
+
+.eegMetric span:first-child {
+  color: rgba(139, 69, 19, 0.8);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.eegValue {
+  color: #81c784;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.frequencyBands {
+  display: grid;
+  gap: 8px;
+}
+
+.frequencyBand {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 0;
+  font-size: 14px;
+}
+
+.frequencyBand span:first-child {
+  color: rgba(139, 69, 19, 0.8);
+  font-weight: 600;
+}
+
+.frequencyBand span:last-child {
+  color: #ff9800;
+  font-weight: 600;
+}
+
+/* Archetypes */
+.archetypesGrid {
+  display: grid;
+  gap: 24px;
+}
+
+.archetypeCard {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.archetypeCard h3 {
+  color: #ffffff;
+  margin: 0 0 20px 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.archetypeSummary {
+  margin-bottom: 24px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 0;
+}
+
+.archetypeSummary p {
+  color: rgba(255, 255, 255, 0.8);
+  margin: 8px 0;
+}
+
+.archetypeList {
+  display: grid;
+  gap: 16px;
+}
+
+.archetypeItem {
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 0;
+  border-left: 4px solid #CD853F;
+}
+
+.archetypeItem h4 {
+  color: #CD853F;
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 800;
+  text-transform: capitalize;
+}
+
+.archetypeItem p {
+  color: rgba(255, 255, 255, 0.8);
+  margin: 6px 0;
+  font-size: 14px;
+}
+
+/* Emotions */
+.emotionsGrid {
+  display: grid;
+  gap: 24px;
+}
+
+.emotionCard {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.emotionCard h3 {
+  color: #ffffff;
+  margin: 0 0 20px 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.emotionSummary {
+  margin-bottom: 24px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 0;
+}
+
+.emotionSummary p {
+  color: rgba(255, 255, 255, 0.8);
+  margin: 8px 0;
+}
+
+.emotionBreakdown {
+  display: grid;
+  gap: 16px;
+}
+
+.emotionItem {
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 0;
+  border-left: 4px solid #D2691E;
+}
+
+.emotionItem h4 {
+  color: #D2691E;
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 800;
+  text-transform: capitalize;
+}
+
+.emotionItem p {
+  color: rgba(255, 255, 255, 0.8);
+  margin: 6px 0;
+  font-size: 14px;
+}
+
+/* Themes */
+.themesGrid {
+  display: grid;
+  gap: 24px;
+}
+
+.themeCard {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.themeCard h3 {
+  color: #ffffff;
+  margin: 0 0 20px 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.themeSummary {
+  margin-bottom: 24px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 0;
+}
+
+.themeSummary p {
+  color: rgba(255, 255, 255, 0.8);
+  margin: 8px 0;
+}
+
+.themeBreakdown {
+  display: grid;
+  gap: 16px;
+}
+
+.themeItem {
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 0;
+  border-left: 4px solid #8B4513;
+}
+
+.themeItem h4 {
+  color: #8B4513;
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 800;
+  text-transform: capitalize;
+}
+
+.themeItem p {
+  color: rgba(255, 255, 255, 0.8);
+  margin: 6px 0;
+  font-size: 14px;
+}
+
+/* Sleep Quality */
+.sleepGrid {
+  display: grid;
+  gap: 24px;
+}
+
+.sleepCard {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sleepCard h3 {
+  color: #ffffff;
+  margin: 0 0 20px 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.sleepMetrics {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sleepMetric {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 0;
+}
+
+.sleepMetric span:first-child {
+  color: rgba(139, 69, 19, 0.8);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.sleepValue {
+  color: #4caf50;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.recommendationsList {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 0 0;
+}
+
+.recommendationsList li {
+  color: rgba(139, 69, 19, 0.9);
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(139, 69, 19, 0.2);
+  position: relative;
+  padding-left: 20px;
+}
+
+.recommendationsList li:before {
+  content: "💡";
+  position: absolute;
+  left: 0;
+  top: 8px;
+}
+
+.recommendationsList li:last-child {
+  border-bottom: none;
+}
+
+/* Coherence */
+.coherenceGrid {
+  display: grid;
+  gap: 24px;
+}
+
+.coherenceCard {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.coherenceCard h3 {
+  color: #ffffff;
+  margin: 0 0 20px 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.coherenceMetrics {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.coherenceMetric {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 0;
+}
+
+.coherenceMetric span:first-child {
+  color: rgba(139, 69, 19, 0.8);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.coherenceValue {
+  color: #00bcd4;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.coherenceExplanation {
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 0;
+  border-left: 4px solid #A569BD;
+}
+
+.coherenceExplanation h4 {
+  color: #A569BD;
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.coherenceExplanation p {
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* No Data State */
+.noData {
+  text-align: center;
+  padding: 48px 24px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.noData p {
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .modal {
+    width: 95vw;
+    max-height: 95vh;
+  }
+  
+  .modalHeader {
+    padding: 16px 20px;
+  }
+  
+  .modalHeader h2 {
+    font-size: 20px;
+  }
+  
+  .modalContent {
+    padding: 20px;
+  }
+  
+  .modalTabs {
+    padding: 0 8px;
+  }
+  
+  .tabButton {
+    padding: 12px 16px;
+    font-size: 13px;
+  }
+  
+  .overviewGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .modalFooter {
+    padding: 16px 20px;
+    flex-direction: column;
+  }
+  
+  .exportButton, .shareButton {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Velvet Theme Overrides: align modal with Dashboard/Landing palette */
+.modal {
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(250, 245, 255, 0.95) 50%,
+    rgba(248, 250, 255, 0.96) 100%
+  );
+  border: 3px solid rgba(165, 105, 189, 0.25);
+  box-shadow: 0 25px 70px rgba(165, 105, 189, 0.25), inset 0 3px 15px rgba(255,255,255,0.6);
+  width: 1600px;
+  max-width: 98vw;
+  max-height: 95vh;
+  position: relative;
+  backdrop-filter: blur(18px);
+  border-radius: 0;
+}
+
+/* Remove decorative conic glow */
+.modal::before { content: none; }
+
+.modalHeader {
+  background: linear-gradient(135deg, rgba(255,255,255,0.6) 0%, rgba(250,245,255,0.6) 100%);
+  border-bottom: 3px solid rgba(165, 105, 189, 0.2);
+  position: relative;
+  z-index: 1;
+}
+
+.modalHeader h2 {
+  color: #8B4513;
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: 0.4px;
+  background: linear-gradient(135deg, #8B4513, #A569BD, #D2691E, #CD853F);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 200% 200%;
+  animation: none;
+  position: relative;
+}
+
+.modalHeader h2::after { display: none; }
+
+/* animations removed */
+
+.closeButton {
+  background: rgba(255, 255, 255, 0.75);
+  color: #8B4513;
+  border: 2px solid rgba(165,105,189,0.4);
+  border-radius: 0;
+}
+
+.closeButton:hover { background: rgba(165, 105, 189, 0.15); }
+
+.modalTabs {
+  background: rgba(255, 255, 255, 0.55);
+  border-bottom: 3px solid rgba(165, 105, 189, 0.18);
+}
+
+.tabButton {
+  color: rgba(139, 69, 19, 0.75);
+  font-weight: 800;
+  font-size: 18px;
+}
+
+.tabButton:hover {
+  color: #A569BD;
+  background: rgba(165, 105, 189, 0.08);
+}
+
+.tabButton.activeTab {
+  color: #A569BD;
+  border-bottom-color: #A569BD;
+  background: rgba(165, 105, 189, 0.12);
+}
+
+.modalContent {
+  max-height: 78vh;
+  color: rgba(139, 69, 19, 0.9);
+}
+
+/* Cards and text styling aligned with Dashboard */
+.overviewCard, .insightCard, .eegCard, .archetypeCard, .emotionCard, .themeCard, .sleepCard, .coherenceCard {
+  background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(250,240,255,0.85) 100%);
+  border: 3px solid rgba(165, 105, 189, 0.2);
+  box-shadow: 0 12px 35px rgba(165,105,189,0.18), inset 0 2px 12px rgba(255,255,255,0.6);
+  border-radius: 0;
+}
+
+.overviewCard h3,
+.insightCard h3,
+.eegCard h3,
+.archetypeCard h3,
+.emotionCard h3,
+.themeCard h3,
+.sleepCard h3,
+.coherenceCard h3 {
+  color: #8B4513;
+  font-size: 24px;
+  font-weight: 900;
+}
+
+.dreamText,
+.insightContent p,
+.archetypeSummary p,
+.archetypeItem p,
+.emotionSummary p,
+.emotionItem p,
+.themeSummary p,
+.themeItem p,
+.processingDetails p,
+.coherenceExplanation p {
+  color: rgba(139, 69, 19, 0.9);
+  font-size: 16px;
+}
+
+.summaryValue,
+.eegValue,
+.sleepValue,
+.coherenceValue {
+  color: #A569BD;
+  font-weight: 800;
+  font-size: 16px;
+}
+
+.insightSection { border-left-color: #A569BD; }
+.archetypeItem { border-left-color: #CD853F; }
+.emotionItem { border-left-color: #e91e63; }
+.themeItem { border-left-color: #9c27b0; }
+.coherenceExplanation { border-left-color: #00bcd4; }
+
+.frequencyBand span:last-child { color: #D2691E; }
+
+.noData { color: rgba(139, 69, 19, 0.6); }
+.noData p { font-size: 16px; }
+
+/* Footer buttons aligned with Landing CTA */
+.exportButton, .shareButton {
+  background: linear-gradient(135deg, #A569BD 0%, #D2691E 60%, #CD853F 100%);
+  color: #fff;
+  border: none;
+  font-size: 1.05rem;
+  font-weight: 800;
+  padding: 14px 28px;
+  border-radius: 0;
+  box-shadow: 0 10px 30px rgba(165, 105, 189, 0.25);
+}
+
+.exportButton:hover, .shareButton:hover { box-shadow: 0 18px 45px rgba(165, 105, 189, 0.35); }
+
+/* Subtle float animation on cards */
+.overviewCard:hover, .insightCard:hover, .eegCard:hover, .archetypeCard:hover, .emotionCard:hover, .themeCard:hover, .sleepCard:hover, .coherenceCard:hover { border-color: rgba(165, 105, 189, 0.4); }
+
+.tabIcon { font-size: 18px; }
+

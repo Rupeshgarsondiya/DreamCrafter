@@ -90,6 +90,32 @@ class EEGPrediction(models.Model):
                 return f"{seconds/3600:.1f} hours"
         return "N/A"
 
+def dream_image_upload_path(instance, filename):
+    return f'dream_images/{instance.user.username}/{instance.prediction.id}/{uuid.uuid4()}{os.path.splitext(filename)[1] or ".png"}'
+
+class DreamImage(models.Model):
+    """Stores generated dream artwork linked to a prediction"""
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='dream_images')
+    prediction = models.ForeignKey(EEGPrediction, on_delete=models.CASCADE, related_name='images')
+    prompt_text = models.TextField()
+    model_used = models.CharField(max_length=100, default='placeholder-generator')
+    status = models.CharField(max_length=20, default='generated')
+    image = models.ImageField(upload_to=dream_image_upload_path)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        db_table = 'dream_images'
+        indexes = [
+            models.Index(fields=['user', '-created_at']),
+            models.Index(fields=['prediction', '-created_at']),
+        ]
+
+    def __str__(self):
+        return f"DreamImage({self.model_used}) for {self.user} on {self.prediction_id}"
+
 class UserDreamProfile(models.Model):
     """Extended user profile for dream analysis"""
     

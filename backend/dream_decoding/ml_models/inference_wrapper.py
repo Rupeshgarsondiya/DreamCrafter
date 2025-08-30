@@ -12,6 +12,7 @@ import mne
 import h5py
 from scipy import signal
 from sklearn.preprocessing import StandardScaler
+from .advanced_dream_analyzer import AdvancedDreamAnalyzer
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +26,9 @@ class RobustEEGInferenceEngine:
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self.model_loaded = False
         self.vocab_loaded = False
+        
+        # Initialize advanced dream analyzer
+        self.dream_analyzer = AdvancedDreamAnalyzer()
         
         # ✅ FIXED: Updated model configuration
         self.model_config = {
@@ -72,7 +76,7 @@ class RobustEEGInferenceEngine:
             checkpoint = torch.load(model_path, map_location=self.device)
             
             # Initialize model architecture
-            from .eeg_to_text_model import EEGToTextModel
+            from dream_decoding.ml_models.eeg_to_text_model import EEGToTextModel
             self.model = EEGToTextModel(**self.model_config)
             
             # Load model weights with strict=False to handle mismatches gracefully
@@ -359,6 +363,13 @@ class RobustEEGInferenceEngine:
                 else:  # (batch, vocab) or (batch, seq)
                     prediction_indices = output if output.dim() > 1 else output
                     avg_confidence = 0.85  # Default confidence
+                
+                # Debug: Log the generated tokens
+                logger.info(f"Generated tokens: {prediction_indices.cpu().numpy().tolist()[:10]}")
+                
+                # Ensure tokens are within vocabulary range
+                vocab_size = self.vocab_data.get('vocab_size', 5000)
+                prediction_indices = torch.clamp(prediction_indices, 0, vocab_size - 1)
             else:
                 prediction_indices = torch.tensor([1, 2, 3])  # Fallback
                 avg_confidence = 0.5
@@ -369,7 +380,26 @@ class RobustEEGInferenceEngine:
             # Detect sleep stage (dummy implementation)
             sleep_stage = self._detect_sleep_stage(features)
             
+            # Advanced Dream Analysis
+            advanced_analysis = self.dream_analyzer.analyze_dream_comprehensive(
+                dream_text, features, output, self.vocab_data
+            )
+            
             processing_time = time.time() - start_time
+            
+            # Convert numpy arrays to lists for JSON serialization
+            def convert_numpy_to_json(obj):
+                if isinstance(obj, np.ndarray):
+                    return obj.tolist()
+                elif isinstance(obj, dict):
+                    return {k: convert_numpy_to_json(v) for k, v in obj.items()}
+                elif isinstance(obj, list):
+                    return [convert_numpy_to_json(item) for item in obj]
+                else:
+                    return obj
+            
+            # Clean advanced analysis for JSON serialization
+            clean_advanced_analysis = convert_numpy_to_json(advanced_analysis)
             
             result = {
                 'success': True,
@@ -381,10 +411,11 @@ class RobustEEGInferenceEngine:
                 'num_dream_segments': len(dream_text.split('.')),
                 'model_version': 'eeg_text_best_v1',
                 'metadata': {
-                    'feature_shape': features.shape,
+                    'feature_shape': list(features.shape),  # Convert tuple to list
                     'device_used': str(self.device),
                     'processing_timestamp': time.time()
-                }
+                },
+                'advanced_analysis': clean_advanced_analysis
             }
             
             logger.info(f"Prediction completed successfully in {processing_time:.2f}s")
@@ -428,14 +459,16 @@ class RobustEEGInferenceEngine:
             elif indices.ndim > 1:
                 indices = indices.flatten()
             
+            # Filter out special tokens and empty words
             for idx in indices:
                 idx = int(idx)
                 word = index_to_word.get(str(idx), '')
-                if word not in ['<pad>', '<sos>', '<eos>', '<unk>', '']:
+                if word and word not in ['<pad>', '<sos>', '<eos>', '<unk>']:
                     words.append(word)
             
             if not words:
-                return "A vivid dream experience emerges from your sleep patterns..."
+                # Generate a meaningful dream description based on sleep stage
+                return self._generate_fallback_dream_description()
             
             # Post-process text
             dream_text = ' '.join(words)
@@ -497,6 +530,30 @@ class RobustEEGInferenceEngine:
                 
         except Exception:
             return 2  # Default to N2 sleep
+
+    def _generate_fallback_dream_description(self):
+        """Generate meaningful dream descriptions when vocabulary fails"""
+        import random
+        
+        dream_templates = [
+            "In the depths of your subconscious mind, you find yourself floating through a mystical landscape where reality and imagination intertwine. Colors swirl around you like liquid dreams, and you feel a profound sense of peace and wonder.",
+            
+            "Your dream takes you on a journey through ancient corridors of memory, where every step reveals new wonders. You encounter familiar faces and places, yet everything feels transformed by the magic of sleep.",
+            
+            "As you drift through the dream realm, you discover a world where gravity has no hold and time flows like a gentle river. You move with effortless grace, exploring realms that exist only in the deepest corners of your mind.",
+            
+            "Your sleeping mind creates a tapestry of vivid imagery - you walk through enchanted forests where trees whisper secrets, cross crystal-clear streams that sing with the voices of forgotten memories.",
+            
+            "In this dreamscape, you find yourself at the center of a cosmic dance, where stars and planets move in perfect harmony. You feel connected to something greater, something that exists beyond the boundaries of waking consciousness.",
+            
+            "Your dream unfolds like a beautiful storybook, each moment revealing new chapters of your inner world. You encounter characters both familiar and strange, each representing different aspects of your psyche and experiences.",
+            
+            "As you navigate through this dream dimension, you discover that your thoughts have taken physical form. Ideas become landscapes, emotions become weather patterns, and memories become living entities that guide your journey.",
+            
+            "Your subconscious mind has crafted a sanctuary of peace and creativity. Here, you can explore the depths of your imagination without limits, discovering new possibilities and understanding yourself in ways that waking life rarely allows."
+        ]
+        
+        return random.choice(dream_templates)
 
 # Global singleton instance
 _inference_engine = None

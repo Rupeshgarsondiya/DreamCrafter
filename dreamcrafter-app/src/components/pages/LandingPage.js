@@ -6,6 +6,8 @@ const LandingPage = ({ setCurrentPage, isAuthenticated }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [activeCloud, setActiveCloud] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [videoError, setVideoError] = useState(false);
+  const videoRef = React.useRef(null);
 
   // Your existing data arrays remain the same...
   const dreamClouds = [
@@ -56,7 +58,8 @@ const LandingPage = ({ setCurrentPage, isAuthenticated }) => {
       excerpt: "Scientists at MIT have developed groundbreaking fMRI technology that can decode visual dreams with unprecedented accuracy, opening new frontiers in consciousness research.",
       image: "🧠",
       date: "August 2025",
-      category: "Neuroscience"
+      category: "Neuroscience",
+      url: "https://www.science.org/doi/10.1126/science.1234330"
     },
     {
       id: 2,
@@ -64,7 +67,8 @@ const LandingPage = ({ setCurrentPage, isAuthenticated }) => {
       excerpt: "New cognitive training techniques help 85% of participants achieve lucid dreams within 30 days, revolutionizing therapeutic applications for PTSD and anxiety disorders.",
       image: "🌙",
       date: "July 2025",
-      category: "Psychology"
+      category: "Psychology",
+      url: "https://news.northwestern.edu/stories/2021/02/scientists-communicate-with-dreamers/"
     },
     {
       id: 3,
@@ -72,7 +76,60 @@ const LandingPage = ({ setCurrentPage, isAuthenticated }) => {
       excerpt: "Machine learning algorithms trained on thousands of dream reports can now crack the code of subconscious symbolism with remarkable precision.",
       image: "🤖",
       date: "June 2025",
-      category: "Technology"
+      category: "Technology",
+      url: "https://resou.osaka-u.ac.jp/en/research/2023/20230330_1/"
+    }
+  ];
+
+  // Curated educational resources: Dream Sights
+  const dreamSights = [
+    {
+      id: 'sf-dreams',
+      title: 'What Are Dreams? Science, Theories, and Meanings',
+      source: 'Sleep Foundation',
+      emoji: '📘',
+      description: 'An approachable overview of dream science, common themes, and what research suggests about why we dream.',
+      url: 'https://www.sleepfoundation.org/dreams'
+    },
+    {
+      id: 'nih-sleep',
+      title: 'Understanding Sleep: Brain Basics',
+      source: 'NIH – NINDS',
+      emoji: '🧠',
+      description: 'Trusted, research-based primer on sleep stages (including REM) and how the brain functions during sleep.',
+      url: 'https://www.ninds.nih.gov/health-information/public-education/brain-basics/understanding-sleep'
+    },
+    {
+      id: 'harvard-why',
+      title: 'Why Do We Dream?',
+      source: 'Harvard Gazette',
+      emoji: '🌙',
+      description: 'A concise Q&A with a Harvard dream researcher discussing current theories and open questions.',
+      url: 'https://news.harvard.edu/gazette/story/2020/06/why-do-we-dream/'
+    },
+    {
+      id: 'sf-lucid',
+      title: 'Lucid Dreaming: What It Is and How To Do It',
+      source: 'Sleep Foundation',
+      emoji: '✨',
+      description: 'Evidence-informed guidance on lucid dreaming techniques, benefits, and safety considerations.',
+      url: 'https://www.sleepfoundation.org/dreams/lucid-dreaming'
+    },
+    {
+      id: 'rem-sleep',
+      title: 'REM Sleep and Dreaming',
+      source: 'Sleep Foundation',
+      emoji: '⚡',
+      description: 'Deep dive into REM physiology, memory consolidation, and the links between REM and dreaming.',
+      url: 'https://www.sleepfoundation.org/stages-of-sleep/rem-sleep'
+    },
+    {
+      id: 'cc-nightmares',
+      title: 'Nightmares and Nightmare Disorder',
+      source: 'Cleveland Clinic',
+      emoji: '😴',
+      description: 'Clinical perspective on nightmares, causes, when to seek help, and available treatments.',
+      url: 'https://my.clevelandclinic.org/health/diseases/12103-nightmares-and-nightmare-disorder'
     }
   ];
 
@@ -87,6 +144,69 @@ const LandingPage = ({ setCurrentPage, isAuthenticated }) => {
   const toggleVideoPlay = () => {
     setIsPlaying(!isPlaying);
   };
+
+  const videoSrcPrimary = (process.env.PUBLIC_URL ? `${process.env.PUBLIC_URL}` : '') + '/videos/Realistic_REM_Sleep_Brain_Video.mp4';
+  const videoSrcFallbacks = [
+    '/videos/Realistic_REM_Sleep_Brain_Video.mp4',
+    (typeof window !== 'undefined' ? `${window.location.origin}/videos/Realistic_REM_Sleep_Brain_Video.mp4` : '/videos/Realistic_REM_Sleep_Brain_Video.mp4')
+  ];
+
+  useEffect(() => {
+    let cancelled = false;
+    const candidates = [videoSrcPrimary, ...videoSrcFallbacks];
+    // Quick reachability probe so we can show a clear message early
+    (async () => {
+      for (const url of candidates) {
+        try {
+          // eslint-disable-next-line no-console
+          console.log('Checking video source:', url);
+          const res = await fetch(url, { method: 'HEAD', cache: 'no-store' });
+          if (res.ok) {
+            if (!cancelled) setVideoError(false);
+            return;
+          }
+        } catch (e) {
+          // ignore and try next
+        }
+      }
+      if (!cancelled) setVideoError(true);
+    })();
+    return () => { cancelled = true; };
+  }, [videoSrcPrimary]);
+
+  // Try autoplay on mount for browsers that require muted+inline
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    const tryPlay = async () => {
+      try {
+        // Many browsers require muted to autoplay
+        v.muted = true;
+        await v.play();
+      } catch (e) {
+        // Autoplay blocked; ignore silently
+      }
+    };
+    tryPlay();
+  }, []);
+
+  // Retry autoplay once metadata is available or when the video can play
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.defaultMuted = true;
+    const onReady = () => {
+      if (v.paused) {
+        v.play().catch(() => {});
+      }
+    };
+    v.addEventListener('loadedmetadata', onReady);
+    v.addEventListener('canplay', onReady);
+    return () => {
+      v.removeEventListener('loadedmetadata', onReady);
+      v.removeEventListener('canplay', onReady);
+    };
+  }, [videoSrcPrimary]);
 
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
@@ -239,11 +359,57 @@ const LandingPage = ({ setCurrentPage, isAuthenticated }) => {
                   </div>
                   <h3 className={styles.newsTitle}>{article.title}</h3>
                   <p className={styles.newsExcerpt}>{article.excerpt}</p>
-                  <button className={styles.readMoreBtn}>
+                  <a
+                    className={styles.readMoreBtn}
+                    href={article.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`Read full article: ${article.title}`}
+                  >
                     Read Full Article <ArrowRight className={styles.readMoreIcon} />
-                  </button>
+                  </a>
                 </div>
                 <div className={styles.newsGlow}></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ✅ DREAM SIGHTS SECTION - Curated educational links */}
+      <section id="sights" className={styles.sightsSection}>
+        <div className={styles.sectionContainer}>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>Dream Sights: Learn More</h2>
+            <p className={styles.sectionSubtitle}>
+              Explore trusted, high-quality guides and explainers about dreams, REM sleep, lucid dreaming,
+              and the neuroscience behind it all.
+            </p>
+          </div>
+
+          <div className={styles.sightsGrid}>
+            {dreamSights.map((item, idx) => (
+              <div key={item.id} className={`${styles.sightCard} ${styles[`sightDelay${(idx % 6) + 1}`]}`}>
+                <div className={styles.sightHeader}>
+                  <div className={styles.sightEmoji}>{item.emoji}</div>
+                  <div className={styles.sightMeta}>
+                    <h3 className={styles.sightTitle}>{item.title}</h3>
+                    <div className={styles.sightSource}>{item.source}</div>
+                  </div>
+                </div>
+                <p className={styles.sightDescription}>{item.description}</p>
+                <div className={styles.sightAction}>
+                  <a
+                    className={styles.sightButton}
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`Read more: ${item.title} (${item.source})`}
+                  >
+                    Read more <ArrowRight className={styles.readMoreIcon} />
+                  </a>
+                </div>
+                <div className={styles.sightGlow}></div>
               </div>
             ))}
           </div>
@@ -267,41 +433,33 @@ const LandingPage = ({ setCurrentPage, isAuthenticated }) => {
             <div className={styles.videoPlayerSide}>
               <div className={styles.videoPlayer}>
                 <div className={styles.videoPlaceholder}>
-                  <div className={styles.videoBrain}>
-                    <div className={styles.videoBrainEmoji}>🧠</div>
-                    
-                    {[...Array(5)].map((_, i) => (
-                      <div
-                        key={i}
-                        className={`${styles.neuralWave} ${styles[`wave${i + 1}`]}`}
-                      ></div>
-                    ))}
-                  </div>
-
-                  <div className={styles.playButtonContainer}>
-                    <button
-                      onClick={toggleVideoPlay}
-                      className={styles.playButton}
-                    >
-                      {isPlaying ? (
-                        <Pause className={styles.playIcon} />
-                      ) : (
-                        <Play className={styles.playIcon} />
-                      )}
-                    </button>
-                  </div>
-
-                  <div className={styles.videoControls}>
+                  {videoError ? (
                     <div className={styles.videoInfo}>
-                      {isPlaying ? 'Playing: Brain Mechanisms During REM Sleep' : 'Brain Mechanisms During REM Sleep'}
+                      <h3 className={styles.videoTitle}>Video not found</h3>
+                      <p className={styles.videoSubtext}>
+                        Place your file at <code>public/videos/brain-neural-activity.mp4</code> and refresh.
+                        You can change the filename if you prefer.
+                      </p>
                     </div>
-                    <div className={styles.progressContainer}>
-                      <div className={styles.progressBar}>
-                        <div className={`${styles.progress} ${isPlaying ? styles.playing : ''}`}></div>
-                      </div>
-                      <span className={styles.duration}>4:27</span>
-                    </div>
-                  </div>
+                  ) : (
+                    <video
+                      className={styles.videoTag}
+                      ref={videoRef}
+                      controls
+                      muted
+                      autoPlay
+                      loop
+                      playsInline
+                      preload="metadata"
+                      onError={() => setVideoError(true)}
+                    >
+                      <source src={videoSrcPrimary} type="video/mp4" />
+                      {videoSrcFallbacks.map((p, i) => (
+                        <source key={i} src={p} type="video/mp4" />
+                      ))}
+                      Your browser does not support the video tag.
+                    </video>
+                  )}
                 </div>
               </div>
             </div>

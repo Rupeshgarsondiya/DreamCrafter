@@ -11,8 +11,8 @@ from pathlib import Path
 import logging
 from tqdm import tqdm
 import os
-from eeg_to_text_model import create_model
-from eeg_dataset import create_data_loaders
+from dream_decoding.ml_models.eeg_to_text_model import create_model
+from dream_decoding.ml_models.eeg_dataset import create_data_loaders
 import gc
 from collections import Counter
 

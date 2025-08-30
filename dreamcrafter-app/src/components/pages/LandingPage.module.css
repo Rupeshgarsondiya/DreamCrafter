@@ -1782,6 +1782,123 @@ body, html {
   scroll-margin-top: 80px; /* ✅ FIX: Smooth scroll offset */
 }
 
+.sightsSection {
+  padding: 6rem 2rem;
+  background: linear-gradient(135deg,
+    rgba(248, 248, 255, 0.7) 0%,
+    rgba(250, 245, 255, 0.9) 50%,
+    rgba(248, 248, 255, 0.7) 100%
+  );
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.sightsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.sightCard {
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(250, 240, 255, 0.9) 100%
+  );
+  border-radius: 22px;
+  border: 3px solid rgba(165, 105, 189, 0.2);
+  padding: 1.5rem;
+  box-shadow:
+    0 12px 40px rgba(165, 105, 189, 0.18),
+    inset 0 2px 12px rgba(255, 255, 255, 0.6);
+  position: relative;
+  overflow: hidden;
+  transform: translateY(35px);
+  opacity: 0;
+  animation: sightAppear 0.8s ease-out forwards;
+}
+
+.sightDelay1 { animation-delay: 0.1s; }
+.sightDelay2 { animation-delay: 0.2s; }
+.sightDelay3 { animation-delay: 0.3s; }
+.sightDelay4 { animation-delay: 0.4s; }
+.sightDelay5 { animation-delay: 0.5s; }
+.sightDelay6 { animation-delay: 0.6s; }
+
+@keyframes sightAppear {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.sightHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.sightEmoji { font-size: 2rem; }
+
+.sightMeta { display: flex; flex-direction: column; gap: 0.25rem; }
+
+.sightTitle {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #8B4513;
+}
+
+.sightSource {
+  font-size: 0.9rem;
+  color: #A569BD;
+  font-weight: 700;
+}
+
+.sightDescription {
+  color: rgba(139, 69, 19, 0.9);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0.5rem 0 1rem 0;
+}
+
+.sightAction { display: flex; }
+
+.sightButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: linear-gradient(135deg, #A569BD, #D2691E);
+  color: white;
+  text-decoration: none;
+  padding: 0.7rem 1.25rem;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 0.95rem;
+  box-shadow: 0 8px 22px rgba(165, 105, 189, 0.25);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sightButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 36px rgba(165, 105, 189, 0.35);
+}
+
+.sightGlow {
+  position: absolute;
+  inset: -6px;
+  border-radius: 26px;
+  background: linear-gradient(135deg,
+    rgba(165, 105, 189, 0.1) 0%,
+    rgba(210, 105, 30, 0.08) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  filter: blur(10px);
+  z-index: -1;
+}
+
+.sightCard:hover .sightGlow { opacity: 1; }
+
 .videoSection {
   padding: 8rem 2rem;
   scroll-margin-top: 80px; /* ✅ FIX: Smooth scroll offset */
@@ -1799,7 +1916,7 @@ body, html {
   gap: 4rem;
   align-items: center;
   margin-top: 4rem;
-  max-width: 1200px;
+  max-width: 1600px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -1824,7 +1941,7 @@ body, html {
 
 .videoPlaceholder {
   position: relative;
-  height: 350px;
+  height: 720px;
   background: linear-gradient(135deg, 
     rgba(165, 105, 189, 0.15) 0%, 
     rgba(210, 105, 30, 0.12) 50%,
@@ -1832,6 +1949,29 @@ body, html {
   );
   border-radius: 20px;
   overflow: hidden;
+}
+
+.videoTag {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+@media (max-width: 1200px) {
+  .videoPlaceholder { height: 600px; }
+}
+
+@media (max-width: 1024px) {
+  .videoPlaceholder { height: 520px; }
+}
+
+@media (max-width: 768px) {
+  .videoPlaceholder { height: 400px; }
+}
+
+@media (max-width: 480px) {
+  .videoPlaceholder { height: 300px; }
 }
 
 .videoDescriptionSide {

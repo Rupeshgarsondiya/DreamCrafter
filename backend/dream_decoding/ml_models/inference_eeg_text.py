@@ -10,7 +10,7 @@ from pathlib import Path
 import logging
 from typing import List, Dict, Optional
 import argparse
-from eeg_to_text_model import create_model
+from dream_decoding.ml_models.eeg_to_text_model import create_model
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -160,7 +160,7 @@ class EEGInference:
                 'dream_text': text,
                 'tokens': output_tokens.cpu().numpy().tolist(),
                 'num_tokens': len(words),
-                'sleep_stage': sleep_stage.item() if sleep_stage is not None else None
+                'sleep_stage': sleep_stage.item() if hasattr(sleep_stage, 'item') else sleep_stage
             }
 
 def main():

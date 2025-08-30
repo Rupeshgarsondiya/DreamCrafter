@@ -23,7 +23,7 @@ class EEGDreamDataset(Dataset):
         self.annotations_dir = Path(annotations_dir)
         self.max_sequence_length = max_sequence_length
         
-        # ✅ FIXED: Proper vocabulary with actual tokens
+        #  FIXED: Proper vocabulary with actual tokens
         self.vocab = {'<PAD>': 0, '<SOS>': 1, '<EOS>': 2, '<UNK>': 3}
         self.word_to_idx = self.vocab.copy()
         self.idx_to_word = {v: k for k, v in self.vocab.items()}

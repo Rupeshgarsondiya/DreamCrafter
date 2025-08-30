@@ -34,3 +34,4 @@ djangorestframework>=3.14.0
 celery>=5.3.0                # Async processing
 redis>=4.6.0                 # Caching
 channels>=4.0.0              # WebSocket support
+python-dotenv>=1.0.1         # Load .env for settings
